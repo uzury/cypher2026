@@ -1,0 +1,380 @@
+<div class="tab-pane-content combat-layout {{#unless (eq activeTab 'combat')}}hidden{{/unless}}" data-application-part="tabCombat">
+  
+  <!-- COLUNA ESQUERDA: WOUNDS -> RECOVERY ROLLS -> LASTING DAMAGE -->
+  <div class="combat-column-left">
+    
+    <!-- 1. WOUNDS CARD -->
+    <div class="sub-panel-card book-callout-border wounds-panel-card">
+      <div class="panel-card-header">
+        <div>
+          <span class="sub-title-tag">DAMAGE & RECOVERY</span>
+          <h3 class="panel-heading">WOUNDS</h3>
+        </div>
+        <i class="fas fa-heart-crack icon-danger"></i>
+      </div>
+
+      <div class="wounds-category-block">
+        <!-- MINOR WOUNDS -->
+        <div class="wound-severity-block">
+          <div class="wound-top-control-row">
+            <div class="wound-title-group">
+              <span class="wound-name">Minor Wounds</span>
+              <div class="wound-step-btns">
+                <button type="button" class="btn-step-mini {{#if (lte system.wounds.minor.current system.wounds.minor.lastingCount)}}is-disabled{{/if}}" data-action="adjustWoundCurrent" data-severity="minor" data-delta="-1" title="Diminuir ferimento">-</button>
+                <button type="button" class="btn-step-mini {{#if (gte system.wounds.minor.current system.wounds.minor.max)}}is-disabled{{/if}}" data-action="adjustWoundCurrent" data-severity="minor" data-delta="1" title="Aumentar ferimento">+</button>
+              </div>
+            </div>
+            <div class="wound-qty-group">
+              <span class="qty-label">Qty.</span>
+              <button type="button" class="btn-step-mini {{#if (lte system.wounds.minor.max 1)}}is-disabled{{/if}}" data-action="adjustWoundMax" data-severity="minor" data-delta="-1" title="Diminuir Capacidade"><i class="fas fa-chevron-left"></i></button>
+              <span class="qty-val-display">{{system.wounds.minor.max}}</span>
+              <button type="button" class="btn-step-mini {{#if (gte system.wounds.minor.max 10)}}is-disabled{{/if}}" data-action="adjustWoundMax" data-severity="minor" data-delta="1" title="Aumentar Capacidade"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
+
+          <div class="wound-pills-row-wrap">
+            <div class="wound-pills-row">
+              {{#times system.wounds.minor.max}}
+              <button type="button" class="pill-tracker-btn {{#if (lte this ../system.wounds.minor.current)}}checked{{/if}} {{#if (lte this ../system.wounds.minor.lastingCount)}}lasting-wound{{/if}}" data-action="toggleWound" data-severity="minor" data-index="{{this}}" title="{{#if (lte this ../system.wounds.minor.lastingCount)}}Ferimento Duradouro (Incurável normalmente){{/if}}">{{this}}</button>
+              {{/times}}
+            </div>
+            <button type="button" class="btn-micro-reset" data-action="resetWoundSeverity" data-severity="minor" title="Zerar Minor Wounds normais"><i class="fas fa-rotate-left"></i></button>
+          </div>
+
+          {{#if system.wounds.minor.alert}}
+          <div class="wound-alert-banner {{system.wounds.minor.alert.level}}">
+            <i class="fas {{system.wounds.minor.alert.icon}}"></i>
+            <span>{{system.wounds.minor.alert.text}}</span>
+          </div>
+          {{/if}}
+        </div>
+
+        <!-- MODERATE WOUNDS -->
+        <div class="wound-severity-block">
+          <div class="wound-top-control-row">
+            <div class="wound-title-group">
+              <span class="wound-name">Moderate Wounds</span>
+              <div class="wound-step-btns">
+                <button type="button" class="btn-step-mini {{#if (lte system.wounds.moderate.current system.wounds.moderate.lastingCount)}}is-disabled{{/if}}" data-action="adjustWoundCurrent" data-severity="moderate" data-delta="-1" title="Diminuir ferimento">-</button>
+                <button type="button" class="btn-step-mini {{#if (gte system.wounds.moderate.current system.wounds.moderate.max)}}is-disabled{{/if}}" data-action="adjustWoundCurrent" data-severity="moderate" data-delta="1" title="Aumentar ferimento">+</button>
+              </div>
+            </div>
+            <div class="wound-qty-group">
+              <span class="qty-label">Qty.</span>
+              <button type="button" class="btn-step-mini {{#if (lte system.wounds.moderate.max 1)}}is-disabled{{/if}}" data-action="adjustWoundMax" data-severity="moderate" data-delta="-1" title="Diminuir Capacidade"><i class="fas fa-chevron-left"></i></button>
+              <span class="qty-val-display">{{system.wounds.moderate.max}}</span>
+              <button type="button" class="btn-step-mini {{#if (gte system.wounds.moderate.max 10)}}is-disabled{{/if}}" data-action="adjustWoundMax" data-severity="moderate" data-delta="1" title="Aumentar Capacidade"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
+
+          <div class="wound-pills-row-wrap">
+            <div class="wound-pills-row">
+              {{#times system.wounds.moderate.max}}
+              <button type="button" class="pill-tracker-btn {{#if (lte this ../system.wounds.moderate.current)}}checked{{/if}} {{#if (lte this ../system.wounds.moderate.lastingCount)}}lasting-wound{{/if}}" data-action="toggleWound" data-severity="moderate" data-index="{{this}}" title="{{#if (lte this ../system.wounds.moderate.lastingCount)}}Ferimento Duradouro (Incurável normalmente){{/if}}">{{this}}</button>
+              {{/times}}
+            </div>
+            <button type="button" class="btn-micro-reset" data-action="resetWoundSeverity" data-severity="moderate" title="Zerar Moderate Wounds normais"><i class="fas fa-rotate-left"></i></button>
+          </div>
+
+          {{#if system.wounds.moderate.alert}}
+          <div class="wound-alert-banner {{system.wounds.moderate.alert.level}}">
+            <i class="fas {{system.wounds.moderate.alert.icon}}"></i>
+            <span>{{system.wounds.moderate.alert.text}}</span>
+          </div>
+          {{/if}}
+        </div>
+
+        <!-- MAJOR WOUNDS -->
+        <div class="wound-severity-block">
+          <div class="wound-top-control-row">
+            <div class="wound-title-group">
+              <span class="wound-name">Major Wounds</span>
+              <div class="wound-step-btns">
+                <button type="button" class="btn-step-mini {{#if (lte system.wounds.major.current system.wounds.major.lastingCount)}}is-disabled{{/if}}" data-action="adjustWoundCurrent" data-severity="major" data-delta="-1" title="Diminuir ferimento">-</button>
+                <button type="button" class="btn-step-mini {{#if (gte system.wounds.major.current system.wounds.major.max)}}is-disabled{{/if}}" data-action="adjustWoundCurrent" data-severity="major" data-delta="1" title="Aumentar ferimento">+</button>
+              </div>
+            </div>
+            <div class="wound-qty-group">
+              <span class="qty-label">Qty.</span>
+              <button type="button" class="btn-step-mini {{#if (lte system.wounds.major.max 1)}}is-disabled{{/if}}" data-action="adjustWoundMax" data-severity="major" data-delta="-1" title="Diminuir Capacidade"><i class="fas fa-chevron-left"></i></button>
+              <span class="qty-val-display">{{system.wounds.major.max}}</span>
+              <button type="button" class="btn-step-mini {{#if (gte system.wounds.major.max 10)}}is-disabled{{/if}}" data-action="adjustWoundMax" data-severity="major" data-delta="1" title="Aumentar Capacidade"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
+
+          <div class="wound-pills-row-wrap">
+            <div class="wound-pills-row">
+              {{#times system.wounds.major.max}}
+              <button type="button" class="pill-tracker-btn {{#if (lte this ../system.wounds.major.current)}}checked{{/if}} {{#if (lte this ../system.wounds.major.lastingCount)}}lasting-wound{{/if}}" data-action="toggleWound" data-severity="major" data-index="{{this}}" title="{{#if (lte this ../system.wounds.major.lastingCount)}}Ferimento Duradouro (Incurável normalmente){{/if}}">{{this}}</button>
+              {{/times}}
+            </div>
+            <button type="button" class="btn-micro-reset" data-action="resetWoundSeverity" data-severity="major" title="Zerar Major Wounds normais"><i class="fas fa-rotate-left"></i></button>
+          </div>
+
+          {{#if system.wounds.major.alert}}
+          <div class="wound-alert-banner {{system.wounds.major.alert.level}}">
+            <i class="fas {{system.wounds.major.alert.icon}}"></i>
+            <span>{{system.wounds.major.alert.text}}</span>
+          </div>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. RECOVERY ROLLS CARD -->
+    <div class="sub-panel-card book-callout-border recovery-panel-card">
+      <div class="panel-card-header">
+        <div>
+          <span class="sub-title-tag">RECOVERY</span>
+          <h3 class="panel-heading">RECOVERY ROLLS</h3>
+        </div>
+        <i class="fas fa-heart icon-recovery"></i>
+      </div>
+
+      <div class="recovery-formula-control-row">
+        <div class="recovery-formula-left-tools">
+          <div class="stepper-subgroup">
+            <button type="button" class="btn-step-mini {{#if (lte system.recoveries.diceNum 0)}}is-disabled{{/if}}" data-action="adjustRecoveryDice" data-delta="-1" title="Diminuir d6 (Mínimo: 1)"><i class="fas fa-chevron-down"></i></button>
+            <button type="button" class="btn-step-mini {{#if (gte system.recoveries.diceNum 6)}}is-disabled{{/if}}" data-action="adjustRecoveryDice" data-delta="1" title="Aumentar d6 (Máximo: 6d6)"><i class="fas fa-chevron-up"></i></button>
+          </div>
+
+          <div class="formula-display-box">
+            <input type="text" class="recovery-formula-input auto-math" name="system.recoveries.formula" value="{{system.recoveries.formula}}" title="Fórmula de Recuperação" autocomplete="off" />
+          </div>
+
+          <div class="stepper-subgroup">
+            <button type="button" class="btn-step-mini {{#if (lte system.recoveries.bonus 1)}}is-disabled{{/if}}" data-action="adjustRecoveryBonus" data-delta="-1" title="Diminuir bônus (Mínimo: 1)">-</button>
+            <button type="button" class="btn-step-mini {{#if (gte system.recoveries.bonus 99)}}is-disabled{{/if}}" data-action="adjustRecoveryBonus" data-delta="1" title="Aumentar bônus (Máximo: 99)">+</button>
+          </div>
+        </div>
+
+        <div class="recovery-formula-right-actions">
+          <button type="button" class="btn-rally-action" data-action="openRallyDialog" title="Rallying (2 ou 5 Might sem Edge)">
+            <i class="fas fa-flag"></i> RALLY
+          </button>
+          <button type="button" class="btn-treatment-action" data-action="openTreatmentDialog" title="Treatment (Teste de Intellect / Healing)">
+            <i class="fas fa-kit-medical"></i> TREATMENT
+          </button>
+          <button type="button" class="btn-micro-reset" data-action="resetAllRecoveries" title="Zerar todos os usos de recuperação">
+            <i class="fas fa-rotate-left"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- GRADE 2x2 -->
+      <div class="recovery-trackers-grid">
+        <!-- 1 ACTION -->
+        <div class="recovery-category-block">
+          <div class="rec-cat-header">
+            <button type="button" class="btn-rec-roll-label {{#if (gte system.recoveries.actionCurrent system.recoveries.actionMax)}}is-disabled{{/if}}" data-action="rollRecoveryCategory" data-type="action" title="Rolar 1 Action Recovery">
+              <i class="fas fa-dice-d20"></i> 1 Action
+            </button>
+            <div class="rec-qty-steppers">
+              <button type="button" class="btn-step-micro {{#if (lte system.recoveries.actionMax 1)}}is-disabled{{/if}}" data-action="adjustRecoveryCategoryMax" data-type="action" data-delta="-1" title="Diminuir capacidade">-</button>
+              <button type="button" class="btn-step-micro {{#if (gte system.recoveries.actionMax 3)}}is-disabled{{/if}}" data-action="adjustRecoveryCategoryMax" data-type="action" data-delta="1" title="Aumentar capacidade">+</button>
+            </div>
+          </div>
+          <div class="rec-pills">
+            {{#times system.recoveries.actionMax}}
+            <button type="button" class="pill-tracker-btn {{#if (lte this ../system.recoveries.actionCurrent)}}checked{{/if}}" data-action="toggleRecovery" data-type="action" data-index="{{this}}">{{this}}</button>
+            {{/times}}
+          </div>
+        </div>
+
+        <!-- 10 MINUTES -->
+        <div class="recovery-category-block">
+          <div class="rec-cat-header">
+            <button type="button" class="btn-rec-roll-label {{#if (gte system.recoveries.tenMinCurrent system.recoveries.tenMinMax)}}is-disabled{{/if}}" data-action="rollRecoveryCategory" data-type="tenMin" title="Rolar 10 Min Recovery (Remove todos os Minor Wounds normais)">
+              <i class="fas fa-dice-d20"></i> 10 Min
+            </button>
+            <div class="rec-qty-steppers">
+              <button type="button" class="btn-step-micro {{#if (lte system.recoveries.tenMinMax 1)}}is-disabled{{/if}}" data-action="adjustRecoveryCategoryMax" data-type="tenMin" data-delta="-1" title="Diminuir capacidade">-</button>
+              <button type="button" class="btn-step-micro {{#if (gte system.recoveries.tenMinMax 3)}}is-disabled{{/if}}" data-action="adjustRecoveryCategoryMax" data-type="tenMin" data-delta="1" title="Aumentar capacidade">+</button>
+            </div>
+          </div>
+          <div class="rec-pills">
+            {{#times system.recoveries.tenMinMax}}
+            <button type="button" class="pill-tracker-btn {{#if (lte this ../system.recoveries.tenMinCurrent)}}checked{{/if}}" data-action="toggleRecovery" data-type="tenMin" data-index="{{this}}">{{this}}</button>
+            {{/times}}
+          </div>
+        </div>
+
+        <!-- 1 HOUR -->
+        <div class="recovery-category-block">
+          <div class="rec-cat-header">
+            <button type="button" class="btn-rec-roll-label {{#if (gte system.recoveries.oneHourCurrent system.recoveries.oneHourMax)}}is-disabled{{/if}}" data-action="rollRecoveryCategory" data-type="oneHour" title="Rolar 1 Hour Recovery (Remove 1 Moderate normal ou todos os Minors normais)">
+              <i class="fas fa-dice-d20"></i> 1 Hour
+            </button>
+            <div class="rec-qty-steppers">
+              <button type="button" class="btn-step-micro {{#if (lte system.recoveries.oneHourMax 1)}}is-disabled{{/if}}" data-action="adjustRecoveryCategoryMax" data-type="oneHour" data-delta="-1" title="Diminuir capacidade">-</button>
+              <button type="button" class="btn-step-micro {{#if (gte system.recoveries.oneHourMax 3)}}is-disabled{{/if}}" data-action="adjustRecoveryCategoryMax" data-type="oneHour" data-delta="1" title="Aumentar capacidade">+</button>
+            </div>
+          </div>
+          <div class="rec-pills">
+            {{#times system.recoveries.oneHourMax}}
+            <button type="button" class="pill-tracker-btn {{#if (lte this ../system.recoveries.oneHourCurrent)}}checked{{/if}}" data-action="toggleRecovery" data-type="oneHour" data-index="{{this}}">{{this}}</button>
+            {{/times}}
+          </div>
+        </div>
+
+        <!-- 10 HOURS -->
+        <div class="recovery-category-block">
+          <div class="rec-cat-header">
+            <button type="button" class="btn-rec-roll-label {{#if (gte system.recoveries.tenHourCurrent system.recoveries.tenHourMax)}}is-disabled{{/if}}" data-action="rollRecoveryCategory" data-type="tenHour" title="Rolar 10 Hours Recovery (Descanso Completo)">
+              <i class="fas fa-dice-d20"></i> 10 Hours
+            </button>
+            <div class="rec-qty-steppers">
+              <button type="button" class="btn-step-micro {{#if (lte system.recoveries.tenHourMax 1)}}is-disabled{{/if}}" data-action="adjustRecoveryCategoryMax" data-type="tenHour" data-delta="-1" title="Diminuir capacidade">-</button>
+              <button type="button" class="btn-step-micro {{#if (gte system.recoveries.tenHourMax 3)}}is-disabled{{/if}}" data-action="adjustRecoveryCategoryMax" data-type="tenHour" data-delta="1" title="Aumentar capacidade">+</button>
+            </div>
+          </div>
+          <div class="rec-pills">
+            {{#times system.recoveries.tenHourMax}}
+            <button type="button" class="pill-tracker-btn {{#if (lte this ../system.recoveries.tenHourCurrent)}}checked{{/if}}" data-action="toggleRecovery" data-type="tenHour" data-index="{{this}}">{{this}}</button>
+            {{/times}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. LASTING / PERMANENT DAMAGE CARD -->
+    <div class="sub-panel-card book-callout-border">
+      <div class="panel-card-header">
+        <div>
+          <span class="sub-title-tag">OPTIONAL RULE</span>
+          <h3 class="panel-heading">LASTING / PERMANENT DAMAGE</h3>
+        </div>
+        <button type="button" class="btn-add-circle" data-action="openAddLastingDamageDialog" title="Registrar Novo Ferimento Duradouro ou Permanente"><i class="fas fa-plus"></i></button>
+      </div>
+
+      <div class="panel-items-list">
+<!-- LASTING / PERMANENT DAMAGE ITEMS -->
+        {{#each categorizedItems.damageItems as |item|}}
+        <div class="lasting-damage-row {{#if item.system.archived}}is-archived{{/if}}" data-item-id="{{item.id}}" data-mouse-tooltip="<div class='tooltip-header'>{{item.name}}</div><div class='tooltip-content'>{{item.system.description}}</div>">
+          <!-- ESQUERDA: ÍCONE + NOME + PÍLULA (CLIQUE ENVIA AO CHAT) -->
+          <div class="damage-left" data-action="openDamageChatPrompt" title="{{localize 'CYPHER2026.Common.Send'}}" style="cursor:pointer;">
+            <img src="{{item.img}}" class="damage-icon" width="22" height="22" style="border-radius:3px;" />
+            <span class="damage-name">{{item.name}}</span>
+            <span class="damage-type-pill {{item.system.damageType}}">
+              {{item.system.damageType}} ({{item.system.severity}})
+            </span>
+          </div>
+
+          <!-- DIREITA: [HEAL] [EXCLUIR/ARQUIVAR] -->
+          <div class="damage-counter-group">
+            <button type="button" class="btn-damage-heal" data-action="healLastingDamage" data-item-id="{{item.id}}" title="Curar ferimento (Remove 1 wound correspondente e arquiva)">
+              <i class="fas fa-kit-medical"></i> {{localize 'CYPHER2026.Damage.Heal'}}
+            </button>
+
+            <button type="button" class="btn-action-icon btn-trash" data-action="itemDelete" title="{{#if item.system.archived}}Excluir Definitivamente (Alt+Clique para Desarquivar){{else}}Excluir (Alt+Clique para Arquivar){{/if}}">
+              <i class="fas fa-trash trash-icon"></i>
+              <i class="fas fa-box-archive archive-icon"></i>
+            </button>
+          </div>
+        </div>
+        {{else}}
+        <div class="empty-placeholder">{{localize 'CYPHER2026.Damage.NoActive'}}</div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
+  <!-- COLUNA DIREITA: ATTACKS -> ARMOR -> AMMO -->
+  <div class="combat-column-right">
+    <!-- 1. ATTACKS CARD -->
+    <div class="sub-panel-card">
+      <div class="panel-card-header">
+        <div>
+          <span class="sub-title-tag">OFFENSE</span>
+          <h3 class="panel-heading">ATTACKS</h3>
+        </div>
+        <button type="button" class="btn-add-circle" data-action="itemCreate" data-type="weapon"><i class="fas fa-plus"></i></button>
+      </div>
+
+      <div class="panel-items-list">
+        {{#each categorizedItems.attacks as |attack|}}
+        <div class="attack-entry-card" data-item-id="{{attack.id}}">
+          <div class="attack-left">
+            <img class="attack-icon" src="{{attack.img}}" width="28" height="28" />
+            <div class="attack-details">
+              <span class="attack-title">{{attack.name}}</span>
+              <span class="attack-sub">{{attack.type}} · PRACTICED</span>
+            </div>
+          </div>
+          <div class="attack-right">
+            <span class="dmg-tag"><strong class="dmg-num">6</strong> DMG</span>
+            <button type="button" class="btn-action-icon btn-roll-d20" title="Roll"><i class="fas fa-dice-d20"></i></button>
+            <button type="button" class="btn-action-icon" data-action="itemEdit"><i class="fas fa-edit"></i></button>
+            <button type="button" class="btn-action-icon btn-trash" data-action="itemDelete"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+        {{else}}
+        <div class="empty-placeholder">Nenhum ataque cadastrado. Clique no + para adicionar.</div>
+        {{/each}}
+      </div>
+    </div>
+
+    <!-- 2. ARMOR CARD -->
+    <div class="sub-panel-card">
+      <div class="panel-card-header">
+        <div>
+          <span class="sub-title-tag">DEFENSE</span>
+          <h3 class="panel-heading">ARMOR</h3>
+        </div>
+        <button type="button" class="btn-add-circle" data-action="itemCreate" data-type="armor"><i class="fas fa-plus"></i></button>
+      </div>
+
+      <div class="panel-items-list">
+        {{#each categorizedItems.armors as |armor|}}
+        <div class="armor-entry-card" data-item-id="{{armor.id}}">
+          <div class="armor-header-row">
+            <div class="armor-title-wrap">
+              <i class="fas fa-shield-halved"></i>
+              <span class="armor-name">{{armor.name}}</span>
+              <span class="tag-status active">ACTIVE</span>
+            </div>
+            <div class="armor-actions">
+              <input type="checkbox" checked title="Active" />
+              <button type="button" class="btn-action-icon" data-action="itemEdit"><i class="fas fa-edit"></i></button>
+              <button type="button" class="btn-action-icon btn-trash" data-action="itemDelete"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>
+          <div class="armor-modifiers-tags">
+            <span class="pill-mod positive">BLOCK: EASED 2 STEPS</span>
+            <span class="pill-mod negative">DODGE: HINDERED 2 STEPS</span>
+          </div>
+        </div>
+        {{else}}
+        <div class="empty-placeholder">Nenhuma armadura equipada.</div>
+        {{/each}}
+      </div>
+    </div>
+
+    <!-- 3. AMMO CARD -->
+    <div class="sub-panel-card">
+      <div class="panel-card-header">
+        <div>
+          <span class="sub-title-tag">RESOURCE</span>
+          <h3 class="panel-heading">AMMO</h3>
+        </div>
+        <button type="button" class="btn-add-circle" data-action="itemCreate" data-type="equipment"><i class="fas fa-plus"></i></button>
+      </div>
+      <div class="panel-items-list">
+        <div class="ammo-row">
+          <div class="ammo-left">
+            <i class="fas fa-bullseye ammo-icon"></i>
+            <span class="ammo-name">Standard Ammo</span>
+          </div>
+          <div class="ammo-counter">
+            <button type="button" class="btn-step">-</button>
+            <span class="ammo-val">12</span>
+            <button type="button" class="btn-step">+</button>
+            <button type="button" class="btn-action-icon"><i class="fas fa-edit"></i></button>
+            <button type="button" class="btn-action-icon btn-trash"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

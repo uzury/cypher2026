@@ -1,0 +1,120 @@
+<div class="tab-pane-content {{#unless (eq activeTab 'skills')}}hidden{{/unless}}" data-application-part="tabSkills">
+  <div class="sub-panel-card book-callout-border">
+    <!-- TOPO: BOTÃO DE ORDENAÇÃO FIXO + DEFESAS EM 2 LINHAS COM ÍCONES + ADICIONAR -->
+    <div class="skills-tab-toolbar">
+      <button type="button" class="btn-sort-skills" data-action="cycleSkillSort" title="Alternar Ordenação (A-Z, Z-A, Rank)">
+        <i class="fas fa-arrow-down-short-wide"></i> {{skillSortLabel}}
+      </button>
+
+      <!-- PERÍCIAS FIXAS -->
+      <div class="fixed-skills-row">
+        <!-- INITIATIVE -->
+        <div class="fixed-skill-pill speed">
+          <div class="fixed-skill-header-line">
+            <span class="fixed-skill-name"><i class="fas fa-sword"></i> INITIATIVE</span>
+            <button type="button" class="btn-fixed-roll" data-action="rollFixedSkill" data-skill-key="initiative" title="Rolar Iniciativa">
+              <i class="fas fa-dice-d20"></i>
+            </button>
+          </div>
+          <button type="button" class="fixed-skill-rank-badge {{system.fixedSkills.initiative.rank}}" data-action="openFixedSkillDialog" data-skill-key="initiative" title="Clique para alterar o grau de treinamento">
+            {{localize (concat "CYPHER2026.SkillRank." system.fixedSkills.initiative.rank)}}
+          </button>
+        </div>
+
+        <!-- MIGHT DEFENSE -->
+        <div class="fixed-skill-pill might">
+          <div class="fixed-skill-header-line">
+            <span class="fixed-skill-name"><i class="fas fa-hand-fist"></i> MIGHT DEFENSE</span>
+            <button type="button" class="btn-fixed-roll" data-action="rollFixedSkill" data-skill-key="mightDefense" title="Rolar Defesa de Might">
+              <i class="fas fa-dice-d20"></i>
+            </button>
+          </div>
+          <button type="button" class="fixed-skill-rank-badge {{system.fixedSkills.mightDefense.rank}}" data-action="openFixedSkillDialog" data-skill-key="mightDefense" title="Clique para alterar o grau de treinamento">
+            {{localize (concat "CYPHER2026.SkillRank." system.fixedSkills.mightDefense.rank)}}
+          </button>
+        </div>
+
+        <!-- SPEED DEFENSE -->
+        <div class="fixed-skill-pill speed">
+          <div class="fixed-skill-header-line">
+            <span class="fixed-skill-name"><i class="fas fa-person-running"></i> SPEED DEFENSE</span>
+            <button type="button" class="btn-fixed-roll" data-action="rollFixedSkill" data-skill-key="speedDefense" title="Rolar Defesa de Speed">
+              <i class="fas fa-dice-d20"></i>
+            </button>
+          </div>
+          <button type="button" class="fixed-skill-rank-badge {{system.fixedSkills.speedDefense.rank}}" data-action="openFixedSkillDialog" data-skill-key="speedDefense" title="Clique para alterar o grau de treinamento">
+            {{localize (concat "CYPHER2026.SkillRank." system.fixedSkills.speedDefense.rank)}}
+          </button>
+        </div>
+
+        <!-- INTELLECT DEFENSE -->
+        <div class="fixed-skill-pill intellect">
+          <div class="fixed-skill-header-line">
+            <span class="fixed-skill-name"><i class="fas fa-brain"></i> INTELLECT DEFENSE</span>
+            <button type="button" class="btn-fixed-roll" data-action="rollFixedSkill" data-skill-key="intellectDefense" title="Rolar Defesa de Intellect">
+              <i class="fas fa-dice-d20"></i>
+            </button>
+          </div>
+          <button type="button" class="fixed-skill-rank-badge {{system.fixedSkills.intellectDefense.rank}}" data-action="openFixedSkillDialog" data-skill-key="intellectDefense" title="Clique para alterar o grau de treinamento">
+            {{localize (concat "CYPHER2026.SkillRank." system.fixedSkills.intellectDefense.rank)}}
+          </button>
+        </div>
+      </div>
+
+      <!-- BOTÃO ADICIONAR COM MODAL -->
+      <button type="button" class="btn-add-skill-modal" data-action="openAddSkillDialog" title="Cadastrar Nova Perícia">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+
+    <!-- LISTA DE PERÍCIAS COM POOL NÃO ABREVIADA -->
+    <div class="skills-grid-list">
+      {{#each categorizedItems.skills as |skill|}}
+      <div class="skill-entry-row {{#if skill.system.archived}}is-archived{{/if}}" data-item-id="{{skill.id}}" data-mouse-tooltip="<div class='tooltip-header'>{{skill.name}}{{#if skill.system.archived}} (ARQUIVADA){{/if}}</div><div class='tooltip-content'>{{skill.system.description}}</div>">
+        <!-- COLUNA 1: ÍCONE E NOME -->
+        <div class="skill-col-main" data-action="openSkillChatPrompt" title="Clique para enviar a perícia ao Chat">
+          <img class="skill-icon" src="{{skill.img}}" alt="{{skill.name}}" width="24" height="24" />
+          <span class="skill-title-name">{{skill.name}}</span>
+        </div>
+
+        <!-- COLUNA 2: GRAU DE TREINAMENTO -->
+        <div class="skill-col-rank">
+          <span class="skill-rank-badge {{skill.system.rank}}">
+            {{localize (concat "CYPHER2026.SkillRank." skill.system.rank)}}
+          </span>
+        </div>
+
+        <!-- COLUNA 3: ORIGEM -->
+        <div class="skill-col-origin">
+          <span class="skill-origin-badge">
+            {{#if skill.system.origin}}{{skill.system.origin}}{{else}}Background{{/if}}
+          </span>
+        </div>
+
+        <!-- COLUNA 4: POOL COMPLETA (MIGHT, SPEED, INTELLECT) -->
+        <div class="skill-col-pool">
+          <span class="skill-pool-badge {{lower skill.system.stat}}">
+            {{localize (concat "CYPHER2026.Stats." (lower skill.system.stat))}}
+          </span>
+        </div>
+
+        <!-- COLUNA 5: AÇÕES -->
+        <div class="skill-col-actions">
+          <button type="button" class="btn-skill-action btn-roll-skill" data-action="rollSkillItem" title="Rolar Teste de {{skill.name}}">
+            <i class="fas fa-dice-d20"></i>
+          </button>
+          <button type="button" class="btn-skill-action btn-edit-skill" data-action="openEditSkillDialog" title="Editar Perícia">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button type="button" class="btn-skill-action btn-delete-skill" data-action="itemDelete" title="{{#if skill.system.archived}}Excluir Definitivamente (Alt+Clique para Desarquivar){{else}}Excluir Perícia (Alt+Clique para Arquivar){{/if}}">
+            <i class="fas fa-trash trash-icon"></i>
+            <i class="fas fa-box-archive archive-icon"></i>
+          </button>
+        </div>
+      </div>
+      {{else}}
+      <div class="empty-placeholder">Nenhuma perícia cadastrada. Clique no botão + ou arraste um Item de Perícia para esta aba.</div>
+      {{/each}}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+<div class="tab-pane-content {{#unless (eq activeTab 'abilities')}}hidden{{/unless}}" data-application-part="tabAbilities">
+  <div class="sub-panel-card book-callout-border">
+    <!-- TOPO: ORGANIZADOR + BARRA DE PESQUISA + ADICIONAR -->
+    <div class="abilities-tab-toolbar">
+      <button type="button" class="btn-sort-abilities" data-action="cycleAbilitySort" title="Alternar Ordenação (A-Z, Z-A, Origem, Tier, Enabler)">
+        <i class="fas fa-arrow-down-short-wide"></i> {{abilitySortLabel}}
+      </button>
+
+      <div class="ability-search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="ability-search-input" placeholder="Pesquisar por nome, tags, custo, tier ou descrição..." autocomplete="off" />
+      </div>
+
+      <button type="button" class="btn-add-ability-modal" data-action="openAddAbilityDialog" title="Cadastrar Nova Habilidade">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+
+    <!-- LISTA DE HABILIDADES -->
+    <div class="abilities-grid-list">
+      {{#each categorizedItems.abilities as |ability|}}
+      <div class="ability-entry-row {{#if ability.system.archived}}is-archived{{/if}}" 
+           data-item-id="{{ability.id}}"
+           data-search-content="{{ability.name}} {{ability.system.description}} {{ability.originLabel}} tier {{ability.system.tier}} {{ability.system.kind}} {{ability.poolLabel}} {{ability.system.cost}}"
+           data-mouse-tooltip="<div class='tooltip-header'>{{ability.name}}{{#if ability.system.archived}} (ARQUIVADA){{/if}}</div><div class='tooltip-content'>{{ability.system.description}}</div>">
+        
+        <!-- COLUNA 1: ÍCONE E NOME (CLIQUE ENVIA O CARD AO CHAT) -->
+        <div class="ability-col-main" data-action="openAbilityChatPrompt" title="Clique para enviar o card da habilidade ao Chat">
+          <img class="ability-icon" src="{{ability.img}}" alt="{{ability.name}}" width="24" height="24" />
+          <span class="ability-title-name">{{ability.name}}</span>
+        </div>
+
+        <!-- COLUNA 2: CUSTO + POOL COMPLETO OU ENABLER -->
+        <div class="ability-col-cost">
+          {{#if (eq ability.system.kind "enabler")}}
+          <span class="ability-cost-badge enabler">ENABLER</span>
+          {{else}}
+          <span class="ability-cost-badge cost {{lower ability.system.pool}}">
+            {{ability.system.cost}} {{ability.poolLabel}}
+          </span>
+          {{/if}}
+        </div>
+
+        <!-- COLUNA 3: ORIGEM (FOCUS, TYPE, DESCRIPTOR, SPECIAL) -->
+        <div class="ability-col-origin">
+          <span class="ability-origin-badge {{lower ability.system.origin}}">
+            {{ability.originLabel}}
+          </span>
+        </div>
+
+        <!-- COLUNA 4: TIER -->
+        <div class="ability-col-tier">
+          <span class="ability-tier-badge">
+            TIER {{ability.system.tier}}
+          </span>
+        </div>
+
+        <!-- COLUNA 5: AÇÕES (D20 PARA ROLAR DADO, EDITAR, LIXEIRA/ARQUIVAR) -->
+        <div class="ability-col-actions">
+          <button type="button" class="btn-ability-action btn-roll-ability" data-action="rollAbilityItem" title="Rolar Teste de {{ability.name}}">
+            <i class="fas fa-dice-d20"></i>
+          </button>
+          <button type="button" class="btn-ability-action btn-edit-ability" data-action="openEditAbilityDialog" title="Editar Habilidade">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button type="button" class="btn-ability-action btn-delete-ability" data-action="itemDelete" title="{{#if ability.system.archived}}Excluir Definitivamente (Alt+Clique para Desarquivar){{else}}Excluir Habilidade (Alt+Clique para Arquivar){{/if}}">
+            <i class="fas fa-trash trash-icon"></i>
+            <i class="fas fa-box-archive archive-icon"></i>
+          </button>
+        </div>
+      </div>
+      {{else}}
+      <div class="empty-placeholder">Nenhuma habilidade cadastrada. Clique no botão + ou arraste um Item de Habilidade para esta aba.</div>
+      {{/each}}
+    </div>
+  </div>
+</div>

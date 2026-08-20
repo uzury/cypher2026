@@ -1,0 +1,14 @@
+@layer components {
+  .cypher2026.sheet.actor.pc {
+    .notes-textarea {
+      background: var(--c-bg-input) !important;
+      border: 1px solid var(--c-border-card) !important;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 0.9rem;
+      resize: vertical;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+}

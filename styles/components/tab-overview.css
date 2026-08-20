@@ -1,0 +1,9 @@
+@layer components {
+  .cypher2026.sheet.actor.pc {
+    .overview-desc-text {
+      color: var(--c-text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+  }
+}

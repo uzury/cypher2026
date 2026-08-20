@@ -1,0 +1,79 @@
+<header class="sheet-header" data-application-part="header">
+  <div class="header-top-bar">
+  <div class="header-top-spacer"></div>
+  <div class="header-right-tools">
+  <div class="dice-tray-group">
+  <button type="button" class="btn-dice-tray" data-action="rollDie" data-die="d6" title="Rolar d6">
+  <i class="fas fa-dice-d6"></i> d6
+  </button>
+  <button type="button" class="btn-dice-tray" data-action="rollDie" data-die="d10" title="Rolar d10">
+  <i class="fas fa-dice-d20"></i> d10
+  </button>
+  <button type="button" class="btn-dice-tray" data-action="rollDie" data-die="d20" title="Rolar d20">
+  <i class="fas fa-dice-d20"></i> d20
+  </button>
+  <button type="button" class="btn-dice-tray" data-action="rollDie" data-die="d100" title="Rolar d100">
+  <i class="fas fa-dice-d20"></i> d100
+  </button>
+  </div>
+
+  <button type="button" class="btn-quick-roll-toggle {{#if quickRollActive}}active{{/if}}" data-action="toggleQuickRoll" title="Ativar/Desativar Quick Roll">
+  <i class="fas {{#if quickRollActive}}fa-circle-check{{else}}fa-circle-dot{{/if}}"></i> QUICK ROLL
+  </button>
+  </div>
+  </div>
+
+  <div class="header-main-row">
+  <div class="avatar-glow-frame">
+  <img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" alt="{{actor.name}}" />
+  </div>
+
+  <div class="name-input-container">
+  <input class="input-char-name" name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'CYPHER2026.Actor.PC.NamePlaceholder'}}" autocomplete="off" />
+  </div>
+
+  <div class="header-stat-triad-squares">
+  <div class="square-stat-card">
+  <span class="square-stat-label">{{localize "CYPHER2026.Actor.Tier"}}</span>
+  <div class="stat-stepper-row">
+  <button type="button" class="btn-stat-stepper {{#if (lte system.tier 1)}}is-disabled{{/if}}" data-action="adjustHeaderStat" data-stat="tier" data-delta="-1"><i class="fas fa-chevron-left"></i></button>
+  <span class="square-stat-value-display">{{system.tier}}</span>
+  <button type="button" class="btn-stat-stepper {{#if (gte system.tier 6)}}is-disabled{{/if}}" data-action="adjustHeaderStat" data-stat="tier" data-delta="1"><i class="fas fa-chevron-right"></i></button>
+  </div>
+  </div>
+
+  <div class="square-stat-card">
+  <span class="square-stat-label">{{localize "CYPHER2026.Actor.Effort"}}</span>
+  <div class="stat-stepper-row">
+  <button type="button" class="btn-stat-stepper {{#if (lte system.effort 1)}}is-disabled{{/if}}" data-action="adjustHeaderStat" data-stat="effort" data-delta="-1"><i class="fas fa-chevron-left"></i></button>
+  <span class="square-stat-value-display">{{system.effort}}</span>
+  <button type="button" class="btn-stat-stepper" data-action="adjustHeaderStat" data-stat="effort" data-delta="1"><i class="fas fa-chevron-right"></i></button>
+  </div>
+  </div>
+
+  <div class="square-stat-card">
+  <span class="square-stat-label">{{localize "CYPHER2026.Actor.XP"}}</span>
+  <div class="stat-stepper-row">
+  <button type="button" class="btn-stat-stepper {{#if (lte system.xp 0)}}is-disabled{{/if}}" data-action="adjustHeaderStat" data-stat="xp" data-delta="-1"><i class="fas fa-chevron-left"></i></button>
+  <span class="square-stat-value-display">{{system.xp}}</span>
+  <button type="button" class="btn-stat-stepper" data-action="adjustHeaderStat" data-stat="xp" data-delta="1"><i class="fas fa-chevron-right"></i></button>
+  </div>
+  </div>
+  </div>
+  </div>
+
+  <div class="character-sentence-row">
+  <span class="sentence-lead">{{localize "CYPHER2026.Actor.PC.SentenceLead"}}</span>
+  <div class="sentence-drop-zone auto-grow" data-sentence-drop="descriptor" title="Editável ou arraste um Item Descriptor">
+  <input name="system.sentence.descriptor" type="text" value="{{system.sentence.descriptor}}" placeholder="{{localize 'CYPHER2026.Actor.PC.DescriptorPlaceholder'}}" />
+  </div>
+  <div class="sentence-drop-zone auto-grow" data-sentence-drop="characterType" title="Editável ou arraste um Item Character Type">
+  <input name="system.sentence.characterType" type="text" value="{{system.sentence.characterType}}" placeholder="{{localize 'CYPHER2026.Actor.PC.TypePlaceholder'}}" />
+  </div>
+  <span class="sentence-mid">{{localize "CYPHER2026.Actor.PC.SentenceMid"}}</span>
+  <div class="sentence-drop-zone auto-grow focus-zone" data-sentence-drop="focus" title="Editável ou arraste um Item Focus">
+  <input name="system.sentence.focus" type="text" value="{{system.sentence.focus}}" placeholder="{{localize 'CYPHER2026.Actor.PC.FocusPlaceholder'}}" />
+  </div>
+  </div>
+  </header>
+  

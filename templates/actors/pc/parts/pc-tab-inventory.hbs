@@ -1,0 +1,22 @@
+<div class="tab-pane {{#unless (eq activeTab 'inventory')}}hidden{{/unless}}" data-application-part="tabInventory">
+  <div class="tab-pane-header">
+  <h2 class="tab-pane-title">{{localize "CYPHER2026.Tabs.Inventory"}}</h2>
+  <button type="button" class="btn-cypher btn-primary" data-action="itemCreate" data-type="equipment">
+  <i class="fas fa-plus"></i> {{localize "CYPHER2026.Common.Add"}}
+  </button>
+  </div>
+  <ul class="cypher-item-list">
+  {{#each categorizedItems.equipment as |item|}}
+  <li class="cypher-item-card" data-item-id="{{item.id}}">
+  <span class="cypher-item-title">{{item.name}}</span>
+  <div class="cypher-item-actions">
+  <button type="button" class="btn-icon" data-action="itemEdit"><i class="fas fa-edit"></i></button>
+  <button type="button" class="btn-icon btn-icon-delete" data-action="itemDelete"><i class="fas fa-trash"></i></button>
+  </div>
+  </li>
+  {{else}}
+  <li class="cypher-empty-list">{{localize "CYPHER2026.Common.NoItems"}}</li>
+  {{/each}}
+  </ul>
+  </div>
+  

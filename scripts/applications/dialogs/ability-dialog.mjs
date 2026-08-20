@@ -1,0 +1,145 @@
+/**
+ * Diálogo em DialogV2 para cadastrar ou editar uma Habilidade.
+ * @param {object} params
+ * @param {Actor} params.actor
+ * @param {Item} [params.item]
+ */
+export async function promptAbilityDialog({ actor, item = null }) {
+  const isEdit = Boolean(item);
+  const name = item?.name || "";
+  const kind = item?.system?.kind || "action";
+  const origin = (item?.system?.origin || "type").toLowerCase();
+  const cost = item?.system?.cost ?? 1;
+  const pool = (item?.system?.pool || "intellect").toLowerCase();
+  const tier = String(item?.system?.tier || "1");
+  const description = item?.system?.description || "";
+
+  const content = `
+    <form class="cypher-ability-dialog-form">
+      <div class="form-group" style="margin-bottom:8px;">
+        <label style="font-weight:bold; font-size:0.85rem;">Nome da Habilidade:</label>
+        <input type="text" name="name" value="${name}" placeholder="Ex: Raio de Energia, Barreira Telecinética..." autofocus required style="width:100%; padding:4px;" />
+      </div>
+
+      <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+        <div>
+          <label style="font-weight:bold; font-size:0.85rem;">Tipo:</label>
+          <select name="kind" id="cypher-ability-kind-select" style="width:100%; padding:4px;">
+            <option value="action" ${kind === "action" ? "selected" : ""}>Ação (Gasta Pool)</option>
+            <option value="enabler" ${kind === "enabler" ? "selected" : ""}>Enabler (Passivo / Permanente)</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-weight:bold; font-size:0.85rem;">Origem:</label>
+          <select name="origin" style="width:100%; padding:4px;">
+            <option value="type" ${origin === "type" ? "selected" : ""}>Type</option>
+            <option value="focus" ${origin === "focus" ? "selected" : ""}>Focus</option>
+            <option value="descriptor" ${origin === "descriptor" ? "selected" : ""}>Descriptor</option>
+            <option value="special" ${origin === "special" ? "selected" : ""}>Special</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:8px;">
+        <div id="cypher-ability-cost-wrap" style="${kind === "enabler" ? "display:none;" : ""}">
+          <label style="font-weight:bold; font-size:0.85rem;">Custo:</label>
+          <input type="number" name="cost" value="${cost}" min="0" style="width:100%; padding:4px; text-align:center;" />
+        </div>
+        <div id="cypher-ability-pool-wrap" style="${kind === "enabler" ? "display:none;" : ""}">
+          <label style="font-weight:bold; font-size:0.85rem;">Pool:</label>
+          <select name="pool" style="width:100%; padding:4px;">
+            <option value="might" ${pool === "might" ? "selected" : ""}>Might</option>
+            <option value="speed" ${pool === "speed" ? "selected" : ""}>Speed</option>
+            <option value="intellect" ${pool === "intellect" ? "selected" : ""}>Intellect</option>
+            <option value="none" ${pool === "none" ? "selected" : ""}>Gratuito / Nenhum</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-weight:bold; font-size:0.85rem;">Tier:</label>
+          <select name="tier" style="width:100%; padding:4px;">
+            <option value="1" ${tier === "1" ? "selected" : ""}>Tier 1</option>
+            <option value="2" ${tier === "2" ? "selected" : ""}>Tier 2</option>
+            <option value="3" ${tier === "3" ? "selected" : ""}>Tier 3</option>
+            <option value="4" ${tier === "4" ? "selected" : ""}>Tier 4</option>
+            <option value="5" ${tier === "5" ? "selected" : ""}>Tier 5</option>
+            <option value="6" ${tier === "6" ? "selected" : ""}>Tier 6</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label style="font-weight:bold; font-size:0.85rem;">Descrição:</label>
+        <textarea name="description" rows="4" placeholder="Descrição completa dos efeitos e regras desta habilidade..." style="width:100%; resize:vertical;">${description}</textarea>
+      </div>
+    </form>
+  `;
+
+  const dialog = new foundry.applications.api.DialogV2({
+    window: { title: isEdit ? `Editar Habilidade: ${item.name}` : "Adicionar Nova Habilidade" },
+    content,
+    buttons: [
+      {
+        action: "save",
+        label: isEdit ? "Salvar" : "Adicionar",
+        icon: isEdit ? "fas fa-save" : "fas fa-plus",
+        default: true,
+        callback: async (event, button) => {
+          const form = button.form;
+          const newName = form.name.value.trim() || (isEdit ? item.name : "Nova Habilidade");
+          const newKind = form.kind.value;
+          const newOrigin = form.origin.value;
+          const newCost = parseInt(form.cost?.value, 10) || 0;
+          const newPool = form.pool?.value || "intellect";
+          const newTier = form.tier.value;
+          const newDesc = form.description.value.trim();
+
+          const data = {
+            name: newName,
+            "system.kind": newKind,
+            "system.origin": newOrigin,
+            "system.cost": newKind === "enabler" ? 0 : newCost,
+            "system.pool": newKind === "enabler" ? "none" : newPool,
+            "system.tier": newTier,
+            "system.description": newDesc
+          };
+
+          if (isEdit) {
+            await item.update(data);
+          } else {
+            await actor.createEmbeddedDocuments("Item", [
+              {
+                name: newName,
+                type: "ability",
+                img: "icons/svg/lightning.svg",
+                system: {
+                  ...data["system"],
+                  archived: false
+                }
+              }
+            ]);
+          }
+        }
+      },
+      {
+        action: "cancel",
+        label: "Cancelar",
+        icon: "fas fa-times"
+      }
+    ],
+    render: (event, html) => {
+      const kindSelect = html.querySelector("#cypher-ability-kind-select");
+      const costWrap = html.querySelector("#cypher-ability-cost-wrap");
+      const poolWrap = html.querySelector("#cypher-ability-pool-wrap");
+
+      if (kindSelect) {
+        kindSelect.addEventListener("change", (ev) => {
+          const isEnabler = ev.target.value === "enabler";
+          if (costWrap) costWrap.style.display = isEnabler ? "none" : "block";
+          if (poolWrap) poolWrap.style.display = isEnabler ? "none" : "block";
+        });
+      }
+    }
+  });
+
+  dialog.render({ force: true });
+}

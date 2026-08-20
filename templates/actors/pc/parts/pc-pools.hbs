@@ -1,0 +1,60 @@
+<section class="pools-section" data-application-part="pools">
+  <div class="section-banner-title">
+  <span class="banner-text">CHARACTER POOLS</span>
+  <div class="banner-stripes">
+  <span></span><span></span><span></span>
+  </div>
+  </div>
+  <div class="pools-grid-triad">
+  {{#each system.stats as |stat key|}}
+  <div class="stat-pool-card {{key}}">
+  <div class="pool-card-top">
+  <button type="button" class="pool-name-badge btn-stat-roll {{key}}" data-action="rollStat" data-stat="{{key}}" title="Rolar Teste de {{localize (concat 'CYPHER2026.Stats.' key)}}">
+  <i class="fas fa-dice-d20"></i> {{localize (concat "CYPHER2026.Stats." key)}}
+  </button>
+
+  <div class="pool-meta-stacked compact">
+  <div class="pool-meta-row compact">
+  <span class="meta-label">EDGE</span>
+  <button type="button" class="btn-micro-step {{#if (lte stat.edge 0)}}is-disabled{{/if}}" data-action="adjustPoolEdge" data-pool="{{key}}" data-delta="-1"><i class="fas fa-chevron-left"></i></button>
+  <input class="meta-input auto-math numeric-input" name="system.stats.{{key}}.edge" type="text" value="{{stat.edge}}" data-current-val="{{stat.edge}}" />
+  <button type="button" class="btn-micro-step" data-action="adjustPoolEdge" data-pool="{{key}}" data-delta="1"><i class="fas fa-chevron-right"></i></button>
+  </div>
+  <div class="pool-meta-row compact">
+  <span class="meta-label">BASE</span>
+  <button type="button" class="btn-micro-step {{#if (lte stat.base 0)}}is-disabled{{/if}}" data-action="adjustPoolBase" data-pool="{{key}}" data-delta="-1"><i class="fas fa-chevron-left"></i></button>
+  <input class="meta-input auto-math numeric-input" name="system.stats.{{key}}.base" type="text" value="{{stat.base}}" data-current-val="{{stat.base}}" />
+  <button type="button" class="btn-micro-step" data-action="adjustPoolBase" data-pool="{{key}}" data-delta="1"><i class="fas fa-chevron-right"></i></button>
+  </div>
+  </div>
+  </div>
+
+  <div class="pool-card-controls compact">
+  <button type="button" class="btn-pool-stepper compact {{#if (lte stat.current 0)}}is-disabled{{/if}}" data-action="adjustPool" data-pool="{{key}}" data-delta="-1">
+  <i class="fas fa-chevron-left"></i>
+  </button>
+
+  <div class="pool-display-numbers compact">
+  <input class="num-input num-current auto-math numeric-input" name="system.stats.{{key}}.current" type="text" value="{{stat.current}}" data-current-val="{{stat.current}}" title="Valor Atual (XX) - Editável" autocomplete="off" />
+  <span class="num-slash">/</span>
+  <span class="num-display-total" title="Valor Total Máximo (YY) - Base + Modificadores">{{stat.total}}</span>
+  </div>
+
+  <button type="button" class="btn-pool-stepper compact {{#if (gte stat.current stat.total)}}is-disabled{{/if}}" data-action="adjustPool" data-pool="{{key}}" data-delta="1">
+  <i class="fas fa-chevron-right"></i>
+  </button>
+
+  <button type="button" class="btn-pool-action compact" data-action="resetPool" data-pool="{{key}}" title="Restaurar Pool ao Total Máximo">
+  <i class="fas fa-rotate-left"></i>
+  </button>
+
+  <button type="button" class="btn-pool-action btn-damage-heart compact" data-action="applyDamagePrompt" data-pool="{{key}}" title="Aplicar Dano na Pool">
+  <i class="fas fa-heart-crack"></i>
+  </button>
+  </div>
+  <div class="pool-bottom-bar {{key}}"></div>
+  </div>
+  {{/each}}
+  </div>
+  </section>
+  

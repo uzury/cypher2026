@@ -1,0 +1,41 @@
+@layer applications {
+  .cypher2026.sheet.actor.pc {
+    .sheet-tabs-bar {
+      flex-shrink: 0;
+      display: flex;
+      width: 100%;
+      border-bottom: 2px solid var(--c-border-subtle);
+      gap: 0;
+      padding: 0;
+      box-sizing: border-box;
+
+      .tab-item {
+        flex: 1 1 0;
+        text-align: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        border-bottom: 3px solid transparent;
+        color: var(--c-text-secondary);
+        font-family: var(--c-font-condensed);
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        padding: 7px 4px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: -2px;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+
+        &:hover { color: var(--c-neon-red); }
+        &.active {
+          color: var(--c-neon-red);
+          border-bottom-color: var(--c-neon-red);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+@layer tokens {
+    /* DARK MODE */
+    :root,
+    .cypher2026.sheet.actor.pc,
+    .theme-dark .cypher2026.sheet.actor.pc {
+      --c-bg-window: #0c0e14;
+      --c-bg-panel: #151821;
+      --c-bg-card: #1c202c;
+      --c-bg-input: #10121a;
+      --c-bg-hover: #262b3b;
+
+      --c-text-primary: #f8fafc;
+      --c-text-secondary: #94a3b8;
+      --c-text-muted: #64748b;
+      --c-text-tag: #e63946;
+
+      --c-border-subtle: #242938;
+      --c-border-card: #2d3346;
+      --c-border-focus: #e63946;
+      --c-border-callout: #e63946;
+
+      --c-neon-red: #e63946;
+      --c-neon-crimson: #ff4d6d;
+      --c-neon-cyan: #00f2fe;
+      --c-neon-green: #2ec4b6;
+      --c-gold: #f59e0b;
+
+      --c-might: #e63946;
+      --c-speed: #2ec4b6;
+      --c-intellect: #3b82f6;
+
+      --c-font-display: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      --c-font-condensed: "Franklin Gothic Medium", "Arial Narrow", sans-serif;
+    }
+
+    /* LIGHT MODE */
+    .theme-light .cypher2026.sheet.actor.pc {
+      --c-bg-window: #f1f3f7;
+      --c-bg-panel: #ffffff;
+      --c-bg-card: #f8fafc;
+      --c-bg-input: #ffffff;
+      --c-bg-hover: #e2e8f0;
+
+      --c-text-primary: #0f172a;
+      --c-text-secondary: #334155;
+      --c-text-muted: #64748b;
+      --c-text-tag: #d62828;
+
+      --c-border-subtle: #cbd5e1;
+      --c-border-card: #94a3b8;
+      --c-border-focus: #d62828;
+      --c-border-callout: #d62828;
+
+      --c-neon-red: #d62828;
+      --c-neon-crimson: #b91c1c;
+      --c-neon-cyan: #0284c7;
+      --c-neon-green: #16a34a;
+      --c-gold: #d97706;
+
+      --c-might: #dc2626;
+      --c-speed: #16a34a;
+      --c-intellect: #0284c7;
+    }
+  }
+  

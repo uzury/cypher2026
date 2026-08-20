@@ -1,0 +1,25 @@
+<div class="tab-pane-content {{#unless (eq activeTab 'equipment')}}hidden{{/unless}}" data-application-part="tabEquipment">
+  <div class="sub-panel-card">
+  <div class="panel-card-header">
+  <div>
+  <span class="sub-title-tag">INVENTORY</span>
+  <h3 class="panel-heading">EQUIPMENT & CYPHERS</h3>
+  </div>
+  <button type="button" class="btn-add-circle" data-action="itemCreate" data-type="equipment"><i class="fas fa-plus"></i></button>
+  </div>
+  <div class="panel-items-list">
+  {{#each categorizedItems.equipment as |item|}}
+  <div class="attack-entry-card" data-item-id="{{item.id}}">
+  <span class="attack-title">{{item.name}}</span>
+  <div class="attack-right">
+  <button type="button" class="btn-action-icon" data-action="itemEdit"><i class="fas fa-edit"></i></button>
+  <button type="button" class="btn-action-icon btn-trash" data-action="itemDelete"><i class="fas fa-trash"></i></button>
+  </div>
+  </div>
+  {{else}}
+  <div class="empty-placeholder">{{localize "CYPHER2026.Common.NoItems"}}</div>
+  {{/each}}
+  </div>
+  </div>
+  </div>
+  

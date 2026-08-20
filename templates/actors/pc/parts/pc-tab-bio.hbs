@@ -1,0 +1,16 @@
+<div class="tab-pane {{#unless (eq activeTab 'bio')}}hidden{{/unless}}" data-application-part="tabBio">
+  <div class="tab-pane-header">
+  <h2 class="tab-pane-title">{{localize "CYPHER2026.Tabs.Bio"}}</h2>
+  </div>
+  <div class="bio-fields-grid">
+  <div class="form-group stacked">
+  <label class="form-field-label">{{localize "CYPHER2026.Actor.PC.Biography"}}</label>
+  <textarea class="cypher-textarea" name="system.biography" rows="6">{{system.biography}}</textarea>
+  </div>
+  <div class="form-group stacked">
+  <label class="form-field-label">{{localize "CYPHER2026.Actor.PC.Notes"}}</label>
+  <textarea class="cypher-textarea" name="system.notes" rows="6">{{system.notes}}</textarea>
+  </div>
+  </div>
+  </div>
+  

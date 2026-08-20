@@ -1,0 +1,270 @@
+@layer components {
+  .cypher2026.sheet.actor.pc {
+    .abilities-tab-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--c-border-subtle);
+
+      /* Botão de Ordenação com largura fixa */
+      .btn-sort-abilities {
+        flex: 0 0 84px;
+        width: 84px;
+        justify-content: center;
+        text-align: center;
+        background: var(--c-bg-card);
+        color: var(--c-text-primary);
+        border: 1px solid var(--c-border-subtle);
+        border-radius: 6px;
+        padding: 5px 6px;
+        font-family: var(--c-font-condensed);
+        font-size: 0.75rem;
+        font-weight: 800;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: background 0.15s ease;
+
+        &:hover {
+          background: var(--c-bg-hover);
+          color: var(--c-neon-red);
+        }
+      }
+
+      /* Barra de Pesquisa */
+      .ability-search-box {
+        flex: 1 1 auto;
+        position: relative;
+        display: flex;
+        align-items: center;
+
+        .search-icon {
+          position: absolute;
+          left: 10px;
+          color: var(--c-text-muted);
+          font-size: 0.8rem;
+          pointer-events: none;
+        }
+
+        input#ability-search-input {
+          width: 100%;
+          background: var(--c-bg-card) !important;
+          border: 1px solid var(--c-border-subtle) !important;
+          border-radius: 6px;
+          padding: 5px 10px 5px 30px;
+          font-size: 0.8rem;
+          color: var(--c-text-primary) !important;
+          transition: border-color 0.15s ease;
+
+          &:focus {
+            outline: none;
+            border-color: var(--c-neon-cyan) !important;
+          }
+        }
+      }
+
+      /* Botão Adicionar */
+      .btn-add-ability-modal {
+        background: var(--c-neon-red);
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+        transition: transform 0.1s ease;
+
+        &:hover {
+          transform: scale(1.08);
+          filter: brightness(1.1);
+        }
+      }
+    }
+
+    /* Grid de Habilidades Perfeitamente Alinhada */
+    .abilities-grid-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      .ability-entry-row {
+        display: flex;
+        align-items: center;
+        background: var(--c-bg-card);
+        border: 1px solid var(--c-border-subtle);
+        border-radius: 6px;
+        padding: 6px 12px;
+        gap: 10px;
+        transition: border-color 0.15s ease, background 0.15s ease, opacity 0.2s ease;
+
+        &:hover {
+          border-color: var(--c-neon-cyan);
+          background: var(--c-bg-hover);
+        }
+
+        /* Ocultado pelo filtro de pesquisa */
+        &.is-filtered-out {
+          display: none !important;
+        }
+
+        /* Habilidade Arquivada */
+        &.is-archived {
+          opacity: 0.45;
+          background: var(--c-bg-panel);
+          filter: grayscale(0.5);
+          border-style: dashed;
+
+          &:hover {
+            opacity: 0.85;
+            filter: grayscale(0);
+          }
+
+          .ability-title-name {
+            text-decoration: line-through;
+            color: var(--c-text-muted);
+          }
+        }
+
+        /* Coluna 1: Nome e Ícone (Flexível) */
+        .ability-col-main {
+          flex: 1 1 auto;
+          min-width: 0;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+
+          .ability-icon {
+            border-radius: 4px;
+            border: 1px solid var(--c-border-subtle);
+            object-fit: cover;
+            flex-shrink: 0;
+          }
+
+          .ability-title-name {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: var(--c-text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          &:hover .ability-title-name {
+            color: var(--c-neon-cyan);
+          }
+        }
+
+        /* Coluna 2: Custo / Enabler (115px) */
+        .ability-col-cost {
+          flex: 0 0 115px;
+          display: flex;
+          justify-content: center;
+
+          .ability-cost-badge {
+            width: 100%;
+            text-align: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 3px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+
+            &.enabler { background: rgba(245, 158, 11, 0.15); color: var(--c-gold); border: 1px solid rgba(245, 158, 11, 0.3); }
+            &.might { background: rgba(230, 57, 70, 0.15); color: var(--c-might); border: 1px solid rgba(230, 57, 70, 0.3); }
+            &.speed { background: rgba(46, 196, 182, 0.15); color: var(--c-speed); border: 1px solid rgba(46, 196, 182, 0.3); }
+            &.intellect { background: rgba(59, 130, 246, 0.15); color: var(--c-intellect); border: 1px solid rgba(59, 130, 246, 0.3); }
+            &.none { background: var(--c-bg-panel); color: var(--c-text-muted); border: 1px solid var(--c-border-subtle); }
+          }
+        }
+
+        /* Coluna 3: Origem (Focus, Type, Descriptor, Special) (110px) */
+        .ability-col-origin {
+          flex: 0 0 110px;
+          display: flex;
+          justify-content: center;
+
+          .ability-origin-badge {
+            width: 100%;
+            text-align: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 3px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            background: var(--c-bg-panel);
+            color: var(--c-text-secondary);
+            border: 1px solid var(--c-border-subtle);
+
+            &.focus { border-left: 3px solid #a855f7; }
+            &.type { border-left: 3px solid var(--c-neon-cyan); }
+            &.descriptor { border-left: 3px solid var(--c-gold); }
+            &.special { border-left: 3px solid var(--c-neon-red); }
+          }
+        }
+
+        /* Coluna 4: Tier (80px) */
+        .ability-col-tier {
+          flex: 0 0 80px;
+          display: flex;
+          justify-content: center;
+
+          .ability-tier-badge {
+            width: 100%;
+            text-align: center;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 3px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            background: var(--c-bg-panel);
+            color: var(--c-text-muted);
+            border: 1px solid var(--c-border-subtle);
+          }
+        }
+
+        /* Coluna 5: Ações (90px) */
+        .ability-col-actions {
+          flex: 0 0 90px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 6px;
+
+          .btn-ability-action {
+            background: transparent;
+            border: none;
+            color: var(--c-text-muted);
+            cursor: pointer;
+            padding: 3px;
+            font-size: 0.85rem;
+
+            &:hover { color: var(--c-text-primary); }
+            &.btn-roll-ability { color: var(--c-neon-cyan); font-size: 0.95rem; }
+            &.btn-delete-ability:hover { color: var(--c-neon-red); }
+
+            .archive-icon { display: none; }
+          }
+        }
+      }
+    }
+  }
+
+  /* Troca de ícone para caixa de arquivo quando Alt estiver pressionado */
+  .cypher2026.sheet.actor.pc.alt-active {
+    .btn-delete-ability {
+      .trash-icon { display: none !important; }
+      .archive-icon { display: inline-block !important; color: var(--c-gold) !important; }
+    }
+  }
+}
