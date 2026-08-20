@@ -17,13 +17,13 @@ export async function promptSkillDialog({ actor, item = null }) {
   const content = `
     <form class="cypher-skill-dialog-form">
       <div class="form-group" style="margin-bottom:8px;">
-        <label style="font-weight:bold; font-size:0.85rem;">Nome da Perícia:</label>
-        <input type="text" name="name" value="${name}" placeholder="Ex: Furtividade, Percepção..." autofocus required style="width:100%; padding:4px;" />
+        <label style="font-weight:bold; font-size:0.85rem;">${game.i18n.localize("CYPHER2026.Dialog.SkillName")}:</label>
+        <input type="text" name="name" value="${name}" placeholder="${game.i18n.localize("CYPHER2026.Dialog.SkillNamePlaceholder")}" autofocus required style="width:100%; padding:4px;" />
       </div>
 
       <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
         <div>
-          <label style="font-weight:bold; font-size:0.85rem;">Grau de Treinamento:</label>
+          <label style="font-weight:bold; font-size:0.85rem;">${game.i18n.localize("CYPHER2026.Dialog.SkillRank")}:</label>
           <select name="rank" style="width:100%; padding:4px;">
             <option value="inability" ${rank === "inability" ? "selected" : ""}>Inabilidade</option>
             <option value="trained" ${rank === "trained" ? "selected" : ""}>Treinada</option>
@@ -38,14 +38,14 @@ export async function promptSkillDialog({ actor, item = null }) {
             <option value="might" ${stat === "might" ? "selected" : ""}>Might</option>
             <option value="speed" ${stat === "speed" ? "selected" : ""}>Speed</option>
             <option value="intellect" ${stat === "intellect" ? "selected" : ""}>Intellect</option>
-            <option value="none" ${stat === "none" ? "selected" : ""}>Geral</option>
+            <option value="none" ${stat === "none" ? "selected" : ""}>${game.i18n.localize("CYPHER2026.Stats.none")}</option>
           </select>
         </div>
       </div>
 
       <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
         <div>
-          <label style="font-weight:bold; font-size:0.85rem;">Origem:</label>
+          <label style="font-weight:bold; font-size:0.85rem;">${game.i18n.localize("CYPHER2026.Dialog.SkillOrigin")}:</label>
           <select name="originType" id="cypher-skill-origin-select" style="width:100%; padding:4px;">
             <option value="background" ${!isTier ? "selected" : ""}>Background</option>
             <option value="tier" ${isTier ? "selected" : ""}>Tier</option>
@@ -65,24 +65,24 @@ export async function promptSkillDialog({ actor, item = null }) {
       </div>
 
       <div class="form-group">
-        <label style="font-weight:bold; font-size:0.85rem;">Descrição:</label>
-        <textarea name="description" rows="3" placeholder="Descrição do uso desta perícia..." style="width:100%; resize:vertical;">${description}</textarea>
+        <label style="font-weight:bold; font-size:0.85rem;">${game.i18n.localize("CYPHER2026.Dialog.SkillDescription")}:</label>
+        <textarea name="description" value="${description}" rows="3" placeholder="${game.i18n.localize("CYPHER2026.Dialog.SkillDescPlaceholder")}" autofocus required style="width:100%; resize:vertical;">${game.i18n.localize("CYPHER2026.Dialog.SkillDescPlaceholder")}</textarea>
       </div>
     </form>
   `;
 
   const dialog = new foundry.applications.api.DialogV2({
-    window: { title: isEdit ? `Editar Perícia: ${item.name}` : "Adicionar Nova Perícia" },
+    window: { title: isEdit ? `Editar Perícia: ${item.name}` : game.i18n.localize("CYPHER2026.Dialog.AddSkillTitle") },
     content,
     buttons: [
       {
         action: "save",
-        label: isEdit ? "Salvar" : "Adicionar",
+        label: isEdit ? "CYPHER2026.Common.Save" : "CYPHER2026.Common.Add",
         icon: isEdit ? "fas fa-save" : "fas fa-plus",
         default: true,
         callback: async (event, button) => {
           const form = button.form;
-          const newName = form.name.value.trim() || (isEdit ? item.name : "Nova Perícia");
+          const newName = form.name.value.trim() || (isEdit ? item.name : game.i18n.localize("CYPHER2026.Skills.Default"));
           const newRank = form.rank.value;
           const newStat = form.stat.value;
           const originType = form.originType.value;

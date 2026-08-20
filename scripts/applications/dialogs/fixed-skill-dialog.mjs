@@ -11,9 +11,9 @@ export function promptFixedSkillDialog({ actor, skillKey }) {
   const skillName = game.i18n.localize("CYPHER2026.FixedSkills." + skillKey);
 
   const content = `
-    <form class="cypher-fixed-skill-dialog">
-      <div class="form-group" style="padding:10px 0;">
-        <label style="font-weight:bold; display:block; margin-bottom:6px;">Grau de Treinamento em ${skillName}:</label>
+  <span style="font-weight:bold; display:block; margin-bottom:6px;"> ${game.i18n.localize("CYPHER2026.FixedSkills.RankLabel")} ${skillName}:</span>  
+  <form class="cypher-fixed-skill-dialog">
+      <div class="form-group" style="padding:0;">
         <select name="rank" style="width:100%; padding:6px; font-weight:bold;">
           <option value="inability" ${fixedSkill.rank === "inability" ? "selected" : ""}>${game.i18n.localize("CYPHER2026.SkillRank.inability")}</option>
           <option value="practiced" ${fixedSkill.rank === "practiced" ? "selected" : ""}>${game.i18n.localize("CYPHER2026.SkillRank.practiced")}</option>
@@ -26,12 +26,12 @@ export function promptFixedSkillDialog({ actor, skillKey }) {
   `;
 
   const dialog = new foundry.applications.api.DialogV2({
-    window: { title: `Modificar ${skillName}` },
+    window: { title: `${game.i18n.localize("CYPHER2026.FixedSkills.ModifyTitle")} ${skillName}` },
     content,
     buttons: [
       {
         action: "save",
-        label: "Salvar",
+        label: "CYPHER2026.Common.Save",
         icon: "fas fa-check",
         default: true,
         callback: async (event, button) => {
@@ -41,7 +41,7 @@ export function promptFixedSkillDialog({ actor, skillKey }) {
       },
       {
         action: "cancel",
-        label: "Cancelar",
+        label: "CYPHER2026.Common.Cancel",
         icon: "fas fa-times"
       }
     ]

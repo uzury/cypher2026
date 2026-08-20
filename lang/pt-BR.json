@@ -57,8 +57,8 @@
   "CYPHER2026.FixedSkills.mightDefense": "Defesa de Might",
   "CYPHER2026.FixedSkills.speedDefense": "Defesa de Speed",
   "CYPHER2026.FixedSkills.intellectDefense": "Defesa de Intellect",
-  "CYPHER2026.FixedSkills.ModifyTitle": "Modificar {name}",
-  "CYPHER2026.FixedSkills.RankLabel": "Grau de Treinamento em {name}:",
+  "CYPHER2026.FixedSkills.ModifyTitle": "Modificar",
+  "CYPHER2026.FixedSkills.RankLabel": "Grau de Treinamento em",
   "CYPHER2026.FixedSkills.ClickHint": "Clique para alterar o grau de treinamento",
   "CYPHER2026.FixedSkills.RollTitle": "Rolar {name}",
 
@@ -83,11 +83,13 @@
   "CYPHER2026.Skills.AddTitle": "Cadastrar Nova Perícia",
   "CYPHER2026.Skills.NoSkills": "Nenhuma perícia cadastrada. Clique no + ou arraste um Item de Perícia para esta aba.",
   "CYPHER2026.Skills.ArchivedBadge": "ARQUIVADA",
+  "CYPHER2026.Skills.Default": "Nova Perícia",
 
   "CYPHER2026.Abilities.SortTitle": "Alternar Ordenação (A-Z, Z-A, Origem, Tier, Enabler)",
   "CYPHER2026.Abilities.SearchPlaceholder": "Pesquisar por nome, tags, custo, tier ou descrição...",
   "CYPHER2026.Abilities.AddTitle": "Cadastrar Nova Habilidade",
   "CYPHER2026.Abilities.NoAbilities": "Nenhuma habilidade cadastrada. Clique no + ou arraste um Item de Habilidade para esta aba.",
+  "CYPHER2026.Abilities.Default": "Nova Habilidade",
 
   "CYPHER2026.Overview.Heading": "CHARACTER OVERVIEW",
   "CYPHER2026.Overview.SummaryTag": "SUMÁRIO",
@@ -210,7 +212,7 @@
   "CYPHER2026.Dialog.SkillDescPlaceholder": "Descrição do uso desta perícia...",
   "CYPHER2026.Dialog.AbilityName": "Nome da Habilidade",
   "CYPHER2026.Dialog.AbilityNamePlaceholder": "Ex: Raio de Energia, Barreira Telecinética...",
-  "CYPHER2026.Dialog.Kind": "Tipo",
+  "CYPHER2026.Dialog.Kind": "Custo",
   "CYPHER2026.Dialog.ActionKind": "Ação (Gasta Pool)",
   "CYPHER2026.Dialog.EnablerKind": "Enabler (Passivo / Permanente)",
   "CYPHER2026.Dialog.Origin": "Origem",
@@ -256,5 +258,15 @@
   "CYPHER2026.Common.Edit": "Editar",
   "CYPHER2026.Common.DeleteOrArchive": "Excluir (Segure Alt para Arquivar)",
   "CYPHER2026.Common.DeleteOrUnarchive": "Excluir (Segure Alt para Desarquivar)",
-  "CYPHER2026.Item.NewItemName": "Novo(a) {type}"
+  "CYPHER2026.Item.NewItemName": "Novo(a) {type}",
+
+  "CYPHER2026.Dialog.OriginType": "Tipo",
+  "CYPHER2026.Dialog.OriginFocus": "Foco",
+  "CYPHER2026.Dialog.OriginDescriptor": "Descritor",
+  "CYPHER2026.Dialog.OriginSpecial": "Especial",
+
+  "CYPHER2026.Dialog.PoolMight": "Might",
+  "CYPHER2026.Dialog.PoolSpeed": "Speed",
+  "CYPHER2026.Dialog.PoolIntellect": "Intellect",
+  "CYPHER2026.Dialog.PoolNone": "Nenhuma / Gratuito"
 }

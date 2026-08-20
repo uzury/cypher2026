@@ -57,8 +57,8 @@
   "CYPHER2026.FixedSkills.mightDefense": "Might Defense",
   "CYPHER2026.FixedSkills.speedDefense": "Speed Defense",
   "CYPHER2026.FixedSkills.intellectDefense": "Intellect Defense",
-  "CYPHER2026.FixedSkills.ModifyTitle": "Modify {name}",
-  "CYPHER2026.FixedSkills.RankLabel": "Training Rank in {name}:",
+  "CYPHER2026.FixedSkills.ModifyTitle": "Modify",
+  "CYPHER2026.FixedSkills.RankLabel": "Training Rank in",
   "CYPHER2026.FixedSkills.ClickHint": "Click to modify training rank",
   "CYPHER2026.FixedSkills.RollTitle": "Roll {name}",
 
@@ -83,11 +83,13 @@
   "CYPHER2026.Skills.AddTitle": "Register New Skill",
   "CYPHER2026.Skills.NoSkills": "No skills registered. Click + or drag & drop a Skill Item here.",
   "CYPHER2026.Skills.ArchivedBadge": "ARCHIVED",
+  "CYPHER2026.Skills.Default": "New Skill",
 
   "CYPHER2026.Abilities.SortTitle": "Toggle Sorting (A-Z, Z-A, Origin, Tier, Enabler)",
   "CYPHER2026.Abilities.SearchPlaceholder": "Search by name, tags, cost, tier, or description...",
   "CYPHER2026.Abilities.AddTitle": "Register New Ability",
   "CYPHER2026.Abilities.NoAbilities": "No abilities registered. Click + or drag & drop an Ability Item here.",
+  "CYPHER2026.Abilities.Default": "New Ability",
 
   "CYPHER2026.Overview.Heading": "CHARACTER OVERVIEW",
   "CYPHER2026.Overview.SummaryTag": "SUMMARY",
@@ -210,7 +212,7 @@
   "CYPHER2026.Dialog.SkillDescPlaceholder": "Description of how this skill is applied...",
   "CYPHER2026.Dialog.AbilityName": "Ability Name",
   "CYPHER2026.Dialog.AbilityNamePlaceholder": "e.g. Energy Ray, Telekinetic Shield...",
-  "CYPHER2026.Dialog.Kind": "Type",
+  "CYPHER2026.Dialog.Kind": "Cost",
   "CYPHER2026.Dialog.ActionKind": "Action (Costs Pool)",
   "CYPHER2026.Dialog.EnablerKind": "Enabler (Passive / Permanent)",
   "CYPHER2026.Dialog.Origin": "Origin",
@@ -256,5 +258,15 @@
   "CYPHER2026.Common.Edit": "Edit",
   "CYPHER2026.Common.DeleteOrArchive": "Delete (Hold Alt to Archive)",
   "CYPHER2026.Common.DeleteOrUnarchive": "Delete (Hold Alt to Unarchive)",
-  "CYPHER2026.Item.NewItemName": "New {type}"
+  "CYPHER2026.Item.NewItemName": "New {type}",
+
+    "CYPHER2026.Dialog.OriginType": "Type",
+  "CYPHER2026.Dialog.OriginFocus": "Focus",
+  "CYPHER2026.Dialog.OriginDescriptor": "Descriptor",
+  "CYPHER2026.Dialog.OriginSpecial": "Special",
+
+  "CYPHER2026.Dialog.PoolMight": "Might",
+  "CYPHER2026.Dialog.PoolSpeed": "Speed",
+  "CYPHER2026.Dialog.PoolIntellect": "Intellect",
+  "CYPHER2026.Dialog.PoolNone": "None / Free"
 }

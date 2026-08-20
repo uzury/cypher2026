@@ -17,45 +17,45 @@ export async function promptAbilityDialog({ actor, item = null }) {
   const content = `
     <form class="cypher-ability-dialog-form">
       <div class="form-group" style="margin-bottom:8px;">
-        <label style="font-weight:bold; font-size:0.85rem;">Nome da Habilidade:</label>
-        <input type="text" name="name" value="${name}" placeholder="Ex: Raio de Energia, Barreira Telecinética..." autofocus required style="width:100%; padding:4px;" />
+        <label style="font-weight:bold; font-size:0.85rem;">${game.i18n.localize("CYPHER2026.Dialog.AbilityName")}:</label>
+        <input type="text" name="name" value="${name}" placeholder="${game.i18n.localize("CYPHER2026.Dialog.AbilityNamePlaceholder")}" autofocus required style="width:100%; padding:4px;" />
       </div>
 
       <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
         <div>
-          <label style="font-weight:bold; font-size:0.85rem;">Tipo:</label>
+          <label style="font-weight:bold; font-size:0.85rem;">${game.i18n.localize("CYPHER2026.Dialog.Kind")}:</label>
           <select name="kind" id="cypher-ability-kind-select" style="width:100%; padding:4px;">
-            <option value="action" ${kind === "action" ? "selected" : ""}>Ação (Gasta Pool)</option>
-            <option value="enabler" ${kind === "enabler" ? "selected" : ""}>Enabler (Passivo / Permanente)</option>
+            <option value="action" ${kind === "action" ? "selected" : ""}>${game.i18n.localize("CYPHER2026.Dialog.ActionKind")}</option>
+            <option value="enabler" ${kind === "enabler" ? "selected" : ""}>${game.i18n.localize("CYPHER2026.Dialog.EnablerKind")}</option>
           </select>
         </div>
         <div>
-          <label style="font-weight:bold; font-size:0.85rem;">Origem:</label>
+          <label style="font-weight:bold; font-size:0.85rem;">${game.i18n.localize("CYPHER2026.Dialog.Origin")}:</label>
           <select name="origin" style="width:100%; padding:4px;">
-            <option value="type" ${origin === "type" ? "selected" : ""}>Type</option>
-            <option value="focus" ${origin === "focus" ? "selected" : ""}>Focus</option>
-            <option value="descriptor" ${origin === "descriptor" ? "selected" : ""}>Descriptor</option>
-            <option value="special" ${origin === "special" ? "selected" : ""}>Special</option>
+            <option value="type" ${origin === "type" ? "selected" : ""}>${game.i18n.localize("CYPHER2026.Dialog.OriginType")}</option>
+            <option value="focus" ${origin === "focus" ? "selected" : ""}>${game.i18n.localize("CYPHER2026.Dialog.OriginFocus")}</option>
+            <option value="descriptor" ${origin === "descriptor" ? "selected" : ""}>${game.i18n.localize("CYPHER2026.Dialog.OriginDescriptor")}</option>
+            <option value="special" ${origin === "special" ? "selected" : ""}>${game.i18n.localize("CYPHER2026.Dialog.OriginSpecial")}</option>
           </select>
         </div>
       </div>
 
       <div class="form-group" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:8px;">
         <div id="cypher-ability-cost-wrap" style="${kind === "enabler" ? "display:none;" : ""}">
-          <label style="font-weight:bold; font-size:0.85rem;">Custo:</label>
+          <label style="font-weight:bold; font-size:0.85rem;">${game.i18n.localize("CYPHER2026.Dialog.Cost")}:</label>
           <input type="number" name="cost" value="${cost}" min="0" style="width:100%; padding:4px; text-align:center;" />
         </div>
         <div id="cypher-ability-pool-wrap" style="${kind === "enabler" ? "display:none;" : ""}">
-          <label style="font-weight:bold; font-size:0.85rem;">Pool:</label>
+          <label style="font-weight:bold; font-size:0.85rem;">${game.i18n.localize("CYPHER2026.Dialog.Pool")}:</label>
           <select name="pool" style="width:100%; padding:4px;">
-            <option value="might" ${pool === "might" ? "selected" : ""}>Might</option>
-            <option value="speed" ${pool === "speed" ? "selected" : ""}>Speed</option>
-            <option value="intellect" ${pool === "intellect" ? "selected" : ""}>Intellect</option>
-            <option value="none" ${pool === "none" ? "selected" : ""}>Gratuito / Nenhum</option>
+            <option value="might" ${pool === "might" ? "selected" : ""}>${game.i18n.localize("CYPHER2026.Dialog.PoolMight")}</option>
+            <option value="speed" ${pool === "speed" ? "selected" : ""}>${game.i18n.localize("CYPHER2026.Dialog.PoolSpeed")}</option>
+            <option value="intellect" ${pool === "intellect" ? "selected" : ""}>${game.i18n.localize("CYPHER2026.Dialog.PoolIntellect")}</option>
+            <option value="none" ${pool === "none" ? "selected" : ""}>${game.i18n.localize("CYPHER2026.Dialog.PoolNone")}</option>
           </select>
         </div>
         <div>
-          <label style="font-weight:bold; font-size:0.85rem;">Tier:</label>
+          <label style="font-weight:bold; font-size:0.85rem;">${game.i18n.localize("CYPHER2026.Dialog.Tier")}:</label>
           <select name="tier" style="width:100%; padding:4px;">
             <option value="1" ${tier === "1" ? "selected" : ""}>Tier 1</option>
             <option value="2" ${tier === "2" ? "selected" : ""}>Tier 2</option>
@@ -68,24 +68,24 @@ export async function promptAbilityDialog({ actor, item = null }) {
       </div>
 
       <div class="form-group">
-        <label style="font-weight:bold; font-size:0.85rem;">Descrição:</label>
-        <textarea name="description" rows="4" placeholder="Descrição completa dos efeitos e regras desta habilidade..." style="width:100%; resize:vertical;">${description}</textarea>
+        <label style="font-weight:bold; font-size:0.85rem;">${game.i18n.localize("CYPHER2026.Dialog.Description")}:</label>
+        <textarea name="description" value="${description}" rows="4" placeholder="${game.i18n.localize("CYPHER2026.Dialog.AbilityDescPlaceholder")}" autofocus required style="width:100%; resize:vertical;">${game.i18n.localize("CYPHER2026.Dialog.AbilityDescPlaceholder")}</textarea>
       </div>
     </form>
   `;
 
   const dialog = new foundry.applications.api.DialogV2({
-    window: { title: isEdit ? `Editar Habilidade: ${item.name}` : "Adicionar Nova Habilidade" },
+    window: { title: isEdit ? `Editar Habilidade: ${item.name}` : game.i18n.localize("CYPHER2026.Dialog.AddAbilityTitle") },
     content,
     buttons: [
       {
         action: "save",
-        label: isEdit ? "Salvar" : "Adicionar",
+        label: isEdit ? "CYPHER2026.Common.Save" : "CYPHER2026.Common.Add",
         icon: isEdit ? "fas fa-save" : "fas fa-plus",
         default: true,
         callback: async (event, button) => {
           const form = button.form;
-          const newName = form.name.value.trim() || (isEdit ? item.name : "Nova Habilidade");
+          const newName = form.name.value.trim() || (isEdit ? item.name : game.i18n.localize("CYPHER2026.Abilities.Default"));
           const newKind = form.kind.value;
           const newOrigin = form.origin.value;
           const newCost = parseInt(form.cost?.value, 10) || 0;

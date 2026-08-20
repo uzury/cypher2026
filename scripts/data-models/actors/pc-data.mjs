@@ -31,7 +31,7 @@ export class PcDataModel extends foundry.abstract.TypeDataModel {
       // Perícias Fixas
       fixedSkills: new SchemaField({
         initiative: new SchemaField({
-          rank: new StringField({ initial: "trained" }),
+          rank: new StringField({ initial: "practiced" }),
           stat: new StringField({ initial: "speed" })
         }),
         mightDefense: new SchemaField({
@@ -39,11 +39,11 @@ export class PcDataModel extends foundry.abstract.TypeDataModel {
           stat: new StringField({ initial: "might" })
         }),
         speedDefense: new SchemaField({
-          rank: new StringField({ initial: "specialized" }),
+          rank: new StringField({ initial: "practiced" }),
           stat: new StringField({ initial: "speed" })
         }),
         intellectDefense: new SchemaField({
-          rank: new StringField({ initial: "expert" }),
+          rank: new StringField({ initial: "practiced" }),
           stat: new StringField({ initial: "intellect" })
         })
       }),
