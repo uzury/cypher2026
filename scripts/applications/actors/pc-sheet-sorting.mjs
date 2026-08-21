@@ -47,8 +47,14 @@ export function sortAbilities(items, sortMode) {
   const sortFn = (a, b) => {
     if (sortMode === "alpha-asc") return a.name.localeCompare(b.name);
     if (sortMode === "alpha-desc") return b.name.localeCompare(a.name);
-    if (sortMode === "origin") return (originOrder[a.system?.origin?.toLowerCase()] ?? 9) - (originOrder[b.system?.origin?.toLowerCase()] ?? 9) || a.name.localeCompare(b.name);
-    if (sortMode === "tier") return (Number(a.system?.tier) || 1) - (Number(b.system?.tier) || 1) || a.name.localeCompare(b.name);
+    if (sortMode === "origin") {
+      const aOrig = a.system?.origin?.toLowerCase() || "type";
+      const bOrig = b.system?.origin?.toLowerCase() || "type";
+      return (originOrder[aOrig] ?? 9) - (originOrder[bOrig] ?? 9) || a.name.localeCompare(b.name);
+    }
+    if (sortMode === "tier") {
+      return (Number(a.system?.tier) || 1) - (Number(b.system?.tier) || 1) || a.name.localeCompare(b.name);
+    }
     if (sortMode === "enabler") {
       const aEn = a.system?.kind === "enabler" ? 0 : 1;
       const bEn = b.system?.kind === "enabler" ? 0 : 1;

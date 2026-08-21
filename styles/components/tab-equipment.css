@@ -1,5 +1,321 @@
-@layer components {
-  .cypher2026.sheet.actor.pc {
-    /* Estilos reservados para inventário e cyphers */
+@layer applications {
+    .cypher2026.sheet.actor.pc {
+      .equipment-tab-content {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      /* BARRA SUPERIOR: CURRENCY E CYPHER LIMIT EM 1 LINHA HORIZONTAL */
+      .currency-top-panel.sub-panel-card {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 6px 10px !important;
+        margin-bottom: 4px !important;
+        gap: 8px !important;
+        flex-wrap: nowrap !important;
+
+        .currency-left-group {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex: 1 1 auto;
+          min-width: 0;
+          flex-wrap: nowrap;
+
+          .currency-section-title {
+            font-family: var(--c-font-condensed);
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: var(--c-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            flex-shrink: 0;
+          }
+
+          .currency-fields-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: nowrap;
+
+            .currency-tier-box {
+              display: flex;
+              align-items: center;
+              background: var(--c-bg-card);
+              border: 1px solid var(--c-border-subtle);
+              border-radius: 4px;
+              padding: 2px 4px;
+              gap: 2px;
+              white-space: nowrap;
+
+              .tier-tag {
+                font-size: 0.58rem;
+                font-weight: 800;
+                color: var(--c-text-muted);
+                text-transform: uppercase;
+                letter-spacing: 0.2px;
+                margin-right: 2px;
+              }
+
+              .btn-step-mini {
+                background: var(--c-bg-input);
+                border: 1px solid var(--c-border-card);
+                color: var(--c-text-primary);
+                border-radius: 3px;
+                width: 18px;
+                height: 18px;
+                font-size: 0.85rem;
+                font-weight: 900;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                padding: 0;
+                line-height: 1;
+                transition: all 0.15s ease;
+
+                &:hover {
+                  background: var(--c-bg-hover);
+                  color: var(--c-gold);
+                }
+              }
+
+              input.currency-num-input {
+                width: 26px;
+                text-align: center;
+                font-family: var(--c-font-condensed);
+                font-size: 0.85rem;
+                font-weight: 900;
+                border: none !important;
+                background: transparent !important;
+                padding: 0;
+                color: var(--c-text-primary) !important;
+              }
+            }
+          }
+        }
+
+        /* LIMITE DE CYPHERS: [CYPHER LIMIT] [atual] / [2] */
+        .cypher-limit-tracker-box {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex-shrink: 0;
+          background: var(--c-bg-card);
+          border: 1px solid var(--c-border-subtle);
+          border-radius: 4px;
+          padding: 3px 8px;
+          white-space: nowrap;
+
+          .limit-label {
+            font-size: 0.62rem;
+            font-weight: 800;
+            color: var(--c-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+          }
+
+          .limit-controls-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            &.over-limit {
+              .limit-current-val {
+                color: var(--c-neon-red);
+                text-shadow: 0 0 6px rgba(239, 68, 68, 0.6);
+              }
+            }
+
+            .limit-current-val {
+              font-family: var(--c-font-condensed);
+              font-size: 0.90rem;
+              font-weight: 900;
+              color: var(--c-neon-cyan);
+              min-width: 14px;
+              text-align: center;
+            }
+
+            .limit-divider {
+              color: var(--c-text-muted);
+              font-size: 0.80rem;
+              font-weight: 800;
+            }
+
+            .limit-max-display {
+              font-family: var(--c-font-condensed);
+              font-size: 0.90rem;
+              font-weight: 900;
+              color: var(--c-text-primary);
+              min-width: 14px;
+              text-align: center;
+            }
+          }
+        }
+      }
+
+      /* GRID DE 2 COLUNAS */
+      .equipment-layout-grid {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        gap: 8px;
+
+        .equipment-col-right {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+      }
+
+      /* CARDS DE ENTRADA (EQUIPMENT, CYPHERS, ARTIFACTS) */
+      .equipment-entry-card,
+      .cypher-entry-card,
+      .artifact-entry-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--c-bg-card);
+        border: 1px solid var(--c-border-subtle);
+        border-radius: 6px;
+        padding: 5px 8px;
+        margin-bottom: 4px;
+        gap: 6px;
+        transition: all 0.15s ease;
+
+        &:hover {
+          border-color: var(--c-border-card);
+          background: var(--c-bg-hover);
+        }
+
+        &.is-archived {
+          opacity: 0.45;
+          background: var(--c-bg-panel);
+          border-style: dashed;
+          filter: grayscale(0.5);
+
+          .eq-name, .cypher-name, .artifact-name {
+            text-decoration: line-through;
+            color: var(--c-text-muted);
+          }
+
+          &:hover {
+            opacity: 0.85;
+            filter: grayscale(0);
+          }
+        }
+
+        .eq-left, .cypher-left, .artifact-left {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex: 1 1 auto;
+          min-width: 0;
+
+          img {
+            border-radius: 3px;
+            border: 1px solid var(--c-border-card);
+            object-fit: cover;
+            flex-shrink: 0;
+          }
+
+          .eq-name, .cypher-name, .artifact-name {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: var(--c-text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          .eq-qty-pill {
+            font-size: 0.58rem;
+            font-weight: 800;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--c-text-muted);
+            border-radius: 3px;
+            padding: 1px 4px;
+          }
+
+          .cypher-info-wrap, .artifact-info-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+
+            .cypher-level-badge, .artifact-level-badge {
+              font-size: 0.58rem;
+              font-weight: 800;
+              text-transform: uppercase;
+              background: rgba(0, 242, 254, 0.15);
+              color: var(--c-neon-cyan);
+              border: 1px solid rgba(0, 242, 254, 0.3);
+              border-radius: 3px;
+              padding: 1px 4px;
+              white-space: nowrap;
+            }
+
+            .artifact-sub-pills {
+              display: flex;
+              align-items: center;
+              gap: 4px;
+
+              .artifact-depletion-badge {
+                font-size: 0.58rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                background: rgba(245, 158, 11, 0.15);
+                color: var(--c-gold);
+                border: 1px solid rgba(245, 158, 11, 0.3);
+                border-radius: 3px;
+                padding: 1px 4px;
+                white-space: nowrap;
+              }
+            }
+          }
+        }
+
+        .eq-right, .cypher-right, .artifact-right {
+          display: flex;
+          align-items: center;
+          gap: 2px;
+          flex-shrink: 0;
+
+          .btn-action-icon {
+            background: transparent;
+            border: none;
+            color: var(--c-text-muted);
+            cursor: pointer;
+            padding: 1px 2px;
+            font-size: 0.78rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.15s ease;
+
+            &:hover { color: var(--c-text-primary); }
+            &.btn-roll-d20 { color: var(--c-gold); font-size: 0.85rem; }
+
+            .trash-icon { display: none; }
+            .archive-icon { display: inline-block; }
+            &:hover .archive-icon { color: var(--c-gold); }
+          }
+        }
+      }
+
+      &.alt-active {
+        .equipment-entry-card .btn-archive-toggle,
+        .cypher-entry-card .btn-archive-toggle,
+        .artifact-entry-card .btn-archive-toggle {
+          .archive-icon { display: none !important; }
+          .trash-icon { display: inline-block !important; color: var(--c-neon-red) !important; }
+        }
+      }
+    }
   }
-}

@@ -1,213 +1,71 @@
 @layer components {
-  .cypher2026.sheet.actor.pc {
-    .combat-layout {
-      display: grid;
-      grid-template-columns: 50% 50%;
-      gap: 8px;
-    }
+    .cypher2026.sheet.actor.pc {
+      .combat-layout {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        gap: 8px;
+      }
 
-    /* Wounds */
-    .wounds-category-block {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-
-      .wound-severity-block {
-        background: var(--c-bg-card);
-        border: 1px solid var(--c-border-subtle);
-        border-radius: 6px;
-        padding: 6px 8px;
+      /* Wounds */
+      .wounds-category-block {
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        gap: 8px;
 
-        .wound-top-control-row {
+        .wound-severity-block {
+          background: var(--c-bg-card);
+          border: 1px solid var(--c-border-subtle);
+          border-radius: 6px;
+          padding: 6px 8px;
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-
-          .wound-title-group {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-
-            .wound-name {
-              font-size: 0.75rem;
-              font-weight: 800;
-              color: var(--c-text-primary);
-              text-transform: uppercase;
-              letter-spacing: 0.2px;
-            }
-
-            .wound-step-btns {
-              display: flex;
-              gap: 3px;
-            }
-          }
-
-          .wound-qty-group {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            font-size: 0.68rem;
-            color: var(--c-text-muted);
-
-            .qty-label {
-              font-weight: 800;
-              text-transform: uppercase;
-              font-size: 0.62rem;
-            }
-
-            .qty-val-display {
-              font-weight: 900;
-              color: var(--c-text-primary);
-              min-width: 16px;
-              text-align: center;
-              font-size: 0.8rem;
-            }
-          }
-
-          .btn-step-mini {
-            background: var(--c-bg-input);
-            border: 1px solid var(--c-border-subtle);
-            color: var(--c-text-primary);
-            border-radius: 3px;
-            width: 18px;
-            height: 18px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.82rem;
-            font-weight: 900;
-            line-height: 1;
-            padding: 0;
-
-            &:hover {
-              background: var(--c-bg-hover);
-              color: var(--c-neon-red);
-            }
-          }
-        }
-
-        .wound-pills-row-wrap {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 4px;
-
-          .wound-pills-row {
-            display: flex;
-            gap: 3px;
-            flex-wrap: wrap;
-            flex: 1;
-
-            .pill-tracker-btn {
-              background: var(--c-bg-input);
-              border: 1px solid var(--c-border-card);
-              color: var(--c-text-primary);
-              border-radius: 3px;
-              width: 20px;
-              height: 20px;
-              font-size: 0.68rem;
-              font-weight: 800;
-              cursor: pointer;
-
-              /* Ferimento Normal: Vermelho */
-              &.checked {
-                background: var(--c-neon-red);
-                color: #ffffff;
-                border-color: var(--c-neon-red);
-              }
-
-              /* Ferimento Duradouro / Permanente: Dourado Âmbar Brilhante */
-              &.checked.lasting-wound {
-                background: #d97706 !important;
-                color: #000000 !important;
-                border-color: #fbbf24 !important;
-                box-shadow: 0 0 6px rgba(245, 158, 11, 0.7);
-              }
-            }
-          }
-
-          .btn-micro-reset {
-            background: transparent;
-            border: none;
-            color: var(--c-text-muted);
-            cursor: pointer;
-            padding: 1px 3px;
-            font-size: 0.75rem;
-            &:hover { color: var(--c-text-primary); }
-          }
-        }
-
-        .wound-alert-banner {
-          display: flex;
-          align-items: center;
+          flex-direction: column;
           gap: 5px;
-          padding: 4px 6px;
-          border-radius: 3px;
-          font-size: 0.65rem;
-          font-weight: 800;
-          line-height: 1.2;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
 
-          &.minor-full {
-            background: rgba(2, 132, 199, 0.15);
-            color: #38bdf8;
-            border: 1px solid rgba(2, 132, 199, 0.35);
-          }
-
-          &.moderate-full {
-            background: rgba(245, 158, 11, 0.18);
-            color: #fbbf24;
-            border: 1px solid rgba(245, 158, 11, 0.45);
-          }
-
-          &.major-hindered {
-            background: rgba(220, 38, 38, 0.2);
-            color: #f87171;
-            border: 1px solid rgba(220, 38, 38, 0.5);
-          }
-
-          &.dead {
-            background: #450a0a;
-            color: #fecaca;
-            border: 1px solid #ef4444;
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.45);
-            font-weight: 900;
-            text-transform: uppercase;
-          }
-        }
-      }
-    }
-
-    /* Recovery */
-    .recovery-panel-card {
-      gap: 6px;
-
-      .recovery-formula-control-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 4px;
-        background: var(--c-bg-card);
-        border: 1px solid var(--c-border-subtle);
-        border-radius: 6px;
-        padding: 3px 5px;
-
-        .recovery-formula-left-tools {
-          display: flex;
-          align-items: center;
-          gap: 3px;
-
-          .stepper-subgroup {
+          .wound-top-control-row {
             display: flex;
-            flex-direction: row;
-            gap: 2px;
+            justify-content: space-between;
             align-items: center;
+
+            .wound-title-group {
+              display: flex;
+              align-items: center;
+              gap: 5px;
+
+              .wound-name {
+                font-size: 0.75rem;
+                font-weight: 800;
+                color: var(--c-text-primary);
+                text-transform: uppercase;
+                letter-spacing: 0.2px;
+              }
+
+              .wound-step-btns {
+                display: flex;
+                gap: 3px;
+              }
+            }
+
+            .wound-qty-group {
+              display: flex;
+              align-items: center;
+              gap: 3px;
+              font-size: 0.68rem;
+              color: var(--c-text-muted);
+
+              .qty-label {
+                font-weight: 800;
+                text-transform: uppercase;
+                font-size: 0.62rem;
+              }
+
+              .qty-val-display {
+                font-weight: 900;
+                color: var(--c-text-primary);
+                min-width: 16px;
+                text-align: center;
+                font-size: 0.8rem;
+              }
+            }
 
             .btn-step-mini {
               background: var(--c-bg-input);
@@ -220,422 +78,829 @@
               align-items: center;
               justify-content: center;
               cursor: pointer;
-              font-size: 0.75rem;
+              font-size: 0.82rem;
               font-weight: 900;
+              line-height: 1;
               padding: 0;
 
               &:hover {
                 background: var(--c-bg-hover);
-                color: var(--c-neon-green);
+                color: var(--c-neon-red);
               }
             }
           }
 
-          .formula-display-box {
-            input.recovery-formula-input {
-              width: 55px;
-              text-align: center;
-              font-family: var(--c-font-condensed);
-              font-size: 0.9rem;
-              font-weight: 800;
-              padding: 1px 2px;
-              border: 1px solid var(--c-border-subtle) !important;
-              background: var(--c-bg-input) !important;
-              border-radius: 3px;
-            }
-          }
-        }
-
-        .recovery-formula-right-actions {
-          display: flex;
-          align-items: center;
-          gap: 3px;
-
-          .btn-rally-action,
-          .btn-treatment-action {
-            border-radius: 4px;
-            padding: 3px 6px;
-            font-size: 0.68rem;
-            font-weight: 800;
-            cursor: pointer;
-            display: inline-flex;
+          .wound-pills-row-wrap {
+            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 3px;
-            text-transform: uppercase;
-            transition: all 0.15s ease;
+            justify-content: space-between;
+            gap: 4px;
+
+            .wound-pills-row {
+              display: flex;
+              gap: 3px;
+              flex-wrap: wrap;
+              flex: 1;
+
+              .pill-tracker-btn {
+                background: var(--c-bg-input);
+                border: 1px solid var(--c-border-card);
+                color: var(--c-text-primary);
+                border-radius: 3px;
+                width: 20px;
+                height: 20px;
+                font-size: 0.68rem;
+                font-weight: 800;
+                cursor: pointer;
+
+                /* Ferimento Normal: Vermelho */
+                &.checked {
+                  background: var(--c-neon-red);
+                  color: #ffffff;
+                  border-color: var(--c-neon-red);
+                }
+
+                /* Ferimento Duradouro / Permanente: Dourado Âmbar Brilhante */
+                &.checked.lasting-wound {
+                  background: #d97706 !important;
+                  color: #000000 !important;
+                  border-color: #fbbf24 !important;
+                  box-shadow: 0 0 6px rgba(245, 158, 11, 0.7);
+                }
+              }
+            }
+
+            .btn-micro-reset {
+              background: transparent;
+              border: none;
+              color: var(--c-text-muted);
+              cursor: pointer;
+              padding: 1px 3px;
+              font-size: 0.75rem;
+              &:hover { color: var(--c-text-primary); }
+            }
+          }
+
+          .wound-alert-banner {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 6px;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            line-height: 1.2;
             white-space: nowrap;
-          }
+            overflow: hidden;
+            text-overflow: ellipsis;
 
-          .btn-rally-action {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--c-gold);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-
-            &:hover {
-              background: var(--c-gold);
-              color: #000;
+            &.minor-full {
+              background: rgba(2, 132, 199, 0.15);
+              color: #38bdf8;
+              border: 1px solid rgba(2, 132, 199, 0.35);
             }
-          }
 
-          .btn-treatment-action {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--c-neon-green);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-
-            &:hover {
-              background: var(--c-neon-green);
-              color: #fff;
+            &.moderate-full {
+              background: rgba(245, 158, 11, 0.18);
+              color: #fbbf24;
+              border: 1px solid rgba(245, 158, 11, 0.45);
             }
-          }
 
-          .btn-micro-reset {
-            background: transparent;
-            border: none;
-            color: var(--c-text-muted);
-            cursor: pointer;
-            padding: 1px 3px;
-            font-size: 0.75rem;
-            &:hover { color: var(--c-text-primary); }
+            &.major-hindered {
+              background: rgba(220, 38, 38, 0.2);
+              color: #f87171;
+              border: 1px solid rgba(220, 38, 38, 0.5);
+            }
+
+            &.dead {
+              background: #450a0a;
+              color: #fecaca;
+              border: 1px solid #ef4444;
+              box-shadow: 0 0 10px rgba(239, 68, 68, 0.45);
+              font-weight: 900;
+              text-transform: uppercase;
+            }
           }
         }
       }
 
-      .recovery-trackers-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 4px;
+      /* Recovery */
+      .recovery-panel-card {
+        gap: 6px;
 
-        .recovery-category-block {
+        .recovery-formula-control-row {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 3px 5px;
+          gap: 4px;
           background: var(--c-bg-card);
-          border-radius: 4px;
           border: 1px solid var(--c-border-subtle);
+          border-radius: 6px;
+          padding: 3px 5px;
 
-          .rec-cat-header {
+          .recovery-formula-left-tools {
             display: flex;
             align-items: center;
             gap: 3px;
 
-            .btn-rec-roll-label {
-              background: transparent;
-              border: none;
-              font-size: 0.68rem;
-              font-weight: 800;
-              color: var(--c-text-primary);
-              cursor: pointer;
-              display: inline-flex;
-              align-items: center;
-              gap: 4px;
-              padding: 0;
-              transition: color 0.15s ease;
-
-              i {
-                color: var(--c-neon-green);
-                font-size: 0.75rem;
-              }
-
-              &:hover {
-                color: var(--c-neon-green);
-              }
-            }
-
-            .rec-qty-steppers {
+            .stepper-subgroup {
               display: flex;
-              gap: 1px;
+              flex-direction: row;
+              gap: 2px;
+              align-items: center;
 
-              .btn-step-micro {
+              .btn-step-mini {
                 background: var(--c-bg-input);
                 border: 1px solid var(--c-border-subtle);
-                color: var(--c-text-muted);
-                border-radius: 2px;
-                width: 13px;
-                height: 13px;
-                font-size: 0.52rem;
+                color: var(--c-text-primary);
+                border-radius: 3px;
+                width: 18px;
+                height: 18px;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
+                font-size: 0.75rem;
+                font-weight: 900;
                 padding: 0;
 
                 &:hover {
-                  color: var(--c-text-primary);
                   background: var(--c-bg-hover);
+                  color: var(--c-neon-green);
+                }
+              }
+            }
+
+            .formula-display-box {
+              input.recovery-formula-input {
+                width: 55px;
+                text-align: center;
+                font-family: var(--c-font-condensed);
+                font-size: 0.9rem;
+                font-weight: 800;
+                padding: 1px 2px;
+                border: 1px solid var(--c-border-subtle) !important;
+                background: var(--c-bg-input) !important;
+                border-radius: 3px;
+              }
+            }
+          }
+
+          .recovery-formula-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+
+            .btn-rally-action,
+            .btn-treatment-action {
+              border-radius: 4px;
+              padding: 3px 6px;
+              font-size: 0.68rem;
+              font-weight: 800;
+              cursor: pointer;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              gap: 3px;
+              text-transform: uppercase;
+              transition: all 0.15s ease;
+              white-space: nowrap;
+            }
+
+            .btn-rally-action {
+              background: rgba(245, 158, 11, 0.15);
+              color: var(--c-gold);
+              border: 1px solid rgba(245, 158, 11, 0.3);
+
+              &:hover {
+                background: var(--c-gold);
+                color: #000;
+              }
+            }
+
+            .btn-treatment-action {
+              background: rgba(16, 185, 129, 0.15);
+              color: var(--c-neon-green);
+              border: 1px solid rgba(16, 185, 129, 0.3);
+
+              &:hover {
+                background: var(--c-neon-green);
+                color: #fff;
+              }
+            }
+
+            .btn-micro-reset {
+              background: transparent;
+              border: none;
+              color: var(--c-text-muted);
+              cursor: pointer;
+              padding: 1px 3px;
+              font-size: 0.75rem;
+              &:hover { color: var(--c-text-primary); }
+            }
+          }
+        }
+
+        .recovery-trackers-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 4px;
+
+          .recovery-category-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 5px;
+            background: var(--c-bg-card);
+            border-radius: 4px;
+            border: 1px solid var(--c-border-subtle);
+
+            .rec-cat-header {
+              display: flex;
+              align-items: center;
+              gap: 3px;
+
+              .btn-rec-roll-label {
+                background: transparent;
+                border: none;
+                font-size: 0.68rem;
+                font-weight: 800;
+                color: var(--c-text-primary);
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 0;
+                transition: color 0.15s ease;
+
+                i {
+                  color: var(--c-neon-green);
+                  font-size: 0.75rem;
+                }
+
+                &:hover {
+                  color: var(--c-neon-green);
+                }
+              }
+
+              .rec-qty-steppers {
+                display: flex;
+                gap: 1px;
+
+                .btn-step-micro {
+                  background: var(--c-bg-input);
+                  border: 1px solid var(--c-border-subtle);
+                  color: var(--c-text-muted);
+                  border-radius: 2px;
+                  width: 13px;
+                  height: 13px;
+                  font-size: 0.52rem;
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  cursor: pointer;
+                  padding: 0;
+
+                  &:hover {
+                    color: var(--c-text-primary);
+                    background: var(--c-bg-hover);
+                  }
+                }
+              }
+            }
+
+            .rec-pills {
+              display: flex;
+              gap: 2px;
+
+              .pill-tracker-btn {
+                background: var(--c-bg-input);
+                border: 1px solid var(--c-border-card);
+                color: var(--c-text-primary);
+                border-radius: 3px;
+                width: 18px;
+                height: 18px;
+                font-size: 0.65rem;
+                font-weight: 800;
+                cursor: pointer;
+
+                &.checked {
+                  background: var(--c-neon-green);
+                  color: #ffffff;
+                  border-color: var(--c-neon-green);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      /* Lasting / Permanent Damage Card */
+      .lasting-damage-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--c-bg-card);
+        border: 1px solid var(--c-border-subtle);
+        border-radius: 6px;
+        padding: 5px 8px;
+        margin-bottom: 4px;
+        transition: all 0.15s ease;
+
+        &.is-archived {
+          opacity: 0.45;
+          border-style: dashed;
+          filter: grayscale(0.5);
+
+          .damage-name {
+            text-decoration: line-through;
+            color: var(--c-text-muted);
+          }
+        }
+
+        .damage-left {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          .damage-name {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: var(--c-text-primary);
+          }
+
+          .damage-type-pill {
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 1px 5px;
+            border-radius: 3px;
+
+            &.lasting { background: rgba(245, 158, 11, 0.15); color: var(--c-gold); border: 1px solid rgba(245, 158, 11, 0.3); }
+            &.permanent { background: rgba(220, 38, 38, 0.15); color: var(--c-neon-red); border: 1px solid rgba(220, 38, 38, 0.3); }
+          }
+        }
+
+        .damage-counter-group {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          .btn-damage-heal {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: var(--c-neon-green);
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+
+            &:hover {
+              background: var(--c-neon-green);
+              color: #ffffff;
+            }
+          }
+
+          .btn-action-icon {
+            background: transparent;
+            border: none;
+            color: var(--c-text-muted);
+            cursor: pointer;
+            padding: 2px;
+            font-size: 0.8rem;
+
+            &:hover { color: var(--c-neon-red); }
+            .archive-icon { display: none; }
+          }
+        }
+      }
+
+      /* Attack Entry Card */
+      .attack-entry-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--c-bg-card);
+        border: 1px solid var(--c-border-subtle);
+        border-radius: 6px;
+        padding: 5px 8px;
+        margin-bottom: 4px;
+        gap: 6px;
+        transition: all 0.15s ease;
+
+        &:hover {
+          border-color: var(--c-border-card);
+          background: var(--c-bg-hover);
+        }
+
+        &.is-archived {
+          opacity: 0.45;
+          background: var(--c-bg-panel);
+          border-style: dashed;
+          filter: grayscale(0.5);
+
+          .attack-title {
+            text-decoration: line-through;
+            color: var(--c-text-muted);
+          }
+
+          &:hover {
+            opacity: 0.85;
+            filter: grayscale(0);
+          }
+        }
+
+        .attack-left {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex: 1 1 auto;
+          min-width: 0;
+
+          .attack-icon {
+            border-radius: 4px;
+            border: 1px solid var(--c-border-card);
+            object-fit: cover;
+            flex-shrink: 0;
+          }
+
+          .attack-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            min-width: 0;
+            flex: 1 1 auto;
+
+            .attack-header-line {
+              display: flex;
+              align-items: center;
+              gap: 6px;
+
+              .attack-title {
+                font-size: 0.82rem;
+                font-weight: 800;
+                color: var(--c-text-primary);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+
+              .dmg-tag {
+                color: var(--c-neon-red);
+                font-size: 0.58rem;
+                font-weight: 800;
+                white-space: nowrap;
+                background: rgba(230, 57, 70, 0.12);
+                border: 1px solid rgba(230, 57, 70, 0.3);
+                padding: 1px 4px;
+                border-radius: 3px;
+                letter-spacing: 0.2px;
+                line-height: 1.1;
+
+                .dmg-num {
+                  font-size: 0.78rem;
+                  font-weight: 900;
+                }
+              }
+            }
+
+            .attack-sub-meta {
+              font-size: 0.58rem;
+              color: var(--c-text-muted);
+              text-transform: uppercase;
+              font-weight: 700;
+              display: flex;
+              align-items: center;
+              gap: 3px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              letter-spacing: 0.1px;
+
+              .meta-rank.specialized, .meta-rank.expert { color: var(--c-neon-cyan); }
+              .meta-rank.trained { color: var(--c-neon-green); }
+              .meta-rank.inability { color: var(--c-neon-red); }
+              .meta-cost { color: var(--c-gold); }
+            }
+          }
+        }
+
+        .attack-right {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 2px;
+          flex-shrink: 0;
+
+          .btn-action-icon {
+            background: transparent;
+            border: none;
+            color: var(--c-text-muted);
+            cursor: pointer;
+            padding: 2px 2px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.15s ease;
+
+            &:hover { color: var(--c-text-primary); }
+            &.btn-roll-d20 { color: var(--c-neon-red); font-size: 0.88rem; }
+            &.btn-roll-d20:hover { filter: brightness(1.2); }
+
+            .trash-icon { display: none; }
+            .archive-icon { display: inline-block; }
+            &:hover .archive-icon { color: var(--c-gold); }
+          }
+        }
+      }
+
+      &.alt-active .attack-entry-card .btn-archive-toggle {
+        .archive-icon { display: none !important; }
+        .trash-icon { display: inline-block !important; color: var(--c-neon-red) !important; }
+      }
+
+      /* ARMOR & SHIELD ENTRY CARD (LINHA ÚNICA COMPACTA) */
+      .armor-entry-card {
+        background: var(--c-bg-card);
+        border: 1px solid var(--c-border-subtle);
+        border-radius: 6px;
+        padding: 5px 8px;
+        margin-bottom: 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        transition: all 0.15s ease;
+
+        &:hover {
+          border-color: var(--c-border-card);
+          background: var(--c-bg-hover);
+        }
+
+        &.is-archived {
+          opacity: 0.45;
+          background: var(--c-bg-panel);
+          border-style: dashed;
+          filter: grayscale(0.5);
+
+          .armor-name {
+            text-decoration: line-through;
+            color: var(--c-text-muted);
+          }
+
+          &:hover {
+            opacity: 0.85;
+            filter: grayscale(0);
+          }
+        }
+
+        .armor-header-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 6px;
+
+          .armor-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            min-width: 0;
+
+            .armor-icon {
+              border-radius: 3px;
+              border: 1px solid var(--c-border-card);
+              object-fit: cover;
+              flex-shrink: 0;
+            }
+
+            .armor-name {
+              font-size: 0.82rem;
+              font-weight: 800;
+              color: var(--c-text-primary);
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+
+          .armor-header-right {
+            flex-shrink: 0;
+
+            .tag-status-btn {
+              border: none;
+              border-radius: 3px;
+              padding: 1px 6px;
+              font-size: 0.58rem;
+              font-weight: 800;
+              text-transform: uppercase;
+              letter-spacing: 0.3px;
+              cursor: pointer;
+              display: inline-flex;
+              align-items: center;
+              gap: 3px;
+              transition: all 0.15s ease;
+
+              &.free-use {
+                background: rgba(46, 196, 182, 0.15);
+                color: var(--c-neon-green);
+                border: 1px solid rgba(46, 196, 182, 0.3);
+              }
+
+              &.not-free {
+                background: rgba(230, 57, 70, 0.15);
+                color: var(--c-neon-red);
+                border: 1px solid rgba(230, 57, 70, 0.3);
+              }
+
+              &:hover {
+                filter: brightness(1.2);
+                transform: scale(1.02);
+              }
+            }
+          }
+        }
+
+        /* 2ª Linha: Wounds e Botões em 1 Linha Única sem quebra */
+        .armor-body-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 4px;
+          flex-wrap: nowrap;
+
+          .armor-body-left {
+            flex: 1 1 auto;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+
+            .armor-modifiers-tags {
+              display: flex;
+              gap: 3px;
+              flex-wrap: nowrap;
+
+              .pill-mod {
+                font-size: 0.58rem;
+                font-weight: 800;
+                padding: 1px 4px;
+                border-radius: 3px;
+                letter-spacing: 0.2px;
+                white-space: nowrap;
+
+                &.positive {
+                  background: rgba(46, 196, 182, 0.15);
+                  color: var(--c-neon-green);
+                  border: 1px solid rgba(46, 196, 182, 0.3);
+                }
+                &.negative {
+                  background: rgba(230, 57, 70, 0.15);
+                  color: var(--c-neon-red);
+                  border: 1px solid rgba(230, 57, 70, 0.3);
+                }
+              }
+            }
+
+            /* Tracker de Wounds do Escudo (16px compactos) */
+            .shield-wound-trackers {
+              display: flex;
+              align-items: center;
+              gap: 4px;
+              flex-wrap: nowrap;
+
+              .shield-track-group {
+                display: flex;
+                align-items: center;
+                gap: 2px;
+
+                .track-label {
+                  font-size: 0.56rem;
+                  font-weight: 800;
+                  color: var(--c-text-muted);
+                  text-transform: uppercase;
+                  letter-spacing: 0.2px;
+                }
+
+                .track-pills {
+                  display: flex;
+                  gap: 1px;
+
+                  .pill-tracker-btn.mini {
+                    background: var(--c-bg-input);
+                    border: 1px solid var(--c-border-card);
+                    color: var(--c-text-primary);
+                    border-radius: 2px;
+                    width: 16px;
+                    height: 16px;
+                    font-size: 0.60rem;
+                    font-weight: 800;
+                    cursor: pointer;
+                    padding: 0;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    line-height: 1;
+                    transition: all 0.15s ease;
+
+                    &:hover {
+                      border-color: var(--c-neon-red);
+                    }
+
+                    &.checked {
+                      background: var(--c-neon-red);
+                      color: #ffffff;
+                      border-color: var(--c-neon-red);
+                    }
+
+                    &.major.checked {
+                      background: #450a0a !important;
+                      color: #fecaca !important;
+                      border-color: #ef4444 !important;
+                      box-shadow: 0 0 4px rgba(239, 68, 68, 0.6);
+                    }
+                  }
                 }
               }
             }
           }
 
-          .rec-pills {
+          .armor-body-right {
             display: flex;
+            align-items: center;
             gap: 2px;
+            flex-shrink: 0;
 
-            .pill-tracker-btn {
-              background: var(--c-bg-input);
-              border: 1px solid var(--c-border-card);
-              color: var(--c-text-primary);
+            .btn-def-action {
+              background: var(--c-bg-card);
+              border: 1px solid var(--c-border-subtle);
               border-radius: 3px;
-              width: 18px;
-              height: 18px;
-              font-size: 0.65rem;
+              padding: 2px 4px;
+              font-size: 0.58rem;
               font-weight: 800;
               cursor: pointer;
+              display: inline-flex;
+              align-items: center;
+              gap: 2px;
+              text-transform: uppercase;
+              color: var(--c-text-primary);
+              white-space: nowrap;
+              transition: all 0.15s ease;
 
-              &.checked {
-                background: var(--c-neon-green);
-                color: #ffffff;
-                border-color: var(--c-neon-green);
+              &.btn-block-roll:hover {
+                background: rgba(230, 57, 70, 0.2);
+                border-color: var(--c-might);
+                color: var(--c-might);
               }
+
+              &.btn-dodge-roll:hover {
+                background: rgba(46, 196, 182, 0.2);
+                border-color: var(--c-speed);
+                color: var(--c-speed);
+              }
+
+              &.btn-shield-block {
+                background: rgba(245, 158, 11, 0.15);
+                color: var(--c-gold);
+                border-color: rgba(245, 158, 11, 0.3);
+
+                &:hover {
+                  background: var(--c-gold);
+                  color: #000000;
+                  border-color: var(--c-gold);
+                }
+              }
+            }
+
+            .btn-action-icon {
+              background: transparent;
+              border: none;
+              color: var(--c-text-muted);
+              cursor: pointer;
+              padding: 1px 2px;
+              font-size: 0.78rem;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              transition: color 0.15s ease;
+
+              &:hover { color: var(--c-text-primary); }
+
+              .trash-icon { display: none; }
+              .archive-icon { display: inline-block; }
+              &:hover .archive-icon { color: var(--c-gold); }
             }
           }
         }
       }
-    }
 
-    /* Lasting / Permanent Damage Card */
-    .lasting-damage-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--c-bg-card);
-      border: 1px solid var(--c-border-subtle);
-      border-radius: 6px;
-      padding: 5px 8px;
-      margin-bottom: 4px;
-      transition: all 0.15s ease;
-
-      &.is-archived {
-        opacity: 0.45;
-        border-style: dashed;
-        filter: grayscale(0.5);
-
-        .damage-name {
-          text-decoration: line-through;
-          color: var(--c-text-muted);
-        }
-      }
-
-      .damage-left {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-
-        .damage-name {
-          font-size: 0.82rem;
-          font-weight: 800;
-          color: var(--c-text-primary);
-        }
-
-        .damage-type-pill {
-          font-size: 0.6rem;
-          font-weight: 800;
-          text-transform: uppercase;
-          padding: 1px 5px;
-          border-radius: 3px;
-
-          &.lasting { background: rgba(245, 158, 11, 0.15); color: var(--c-gold); border: 1px solid rgba(245, 158, 11, 0.3); }
-          &.permanent { background: rgba(220, 38, 38, 0.15); color: var(--c-neon-red); border: 1px solid rgba(220, 38, 38, 0.3); }
-        }
-      }
-
-      .damage-counter-group {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-
-        .btn-damage-heal {
-          background: rgba(16, 185, 129, 0.15);
-          border: 1px solid rgba(16, 185, 129, 0.35);
-          color: var(--c-neon-green);
-          border-radius: 3px;
-          padding: 2px 6px;
-          font-size: 0.68rem;
-          font-weight: 800;
-          display: inline-flex;
-          align-items: center;
-          gap: 3px;
-          cursor: pointer;
-
-          &:hover {
-            background: var(--c-neon-green);
-            color: #ffffff;
-          }
-        }
-
-        .btn-action-icon {
-          background: transparent;
-          border: none;
-          color: var(--c-text-muted);
-          cursor: pointer;
-          padding: 2px;
-          font-size: 0.8rem;
-
-          &:hover { color: var(--c-neon-red); }
-          .archive-icon { display: none; }
-        }
-      }
-    }
-
-    /* Demais componentes */
-    .attack-entry-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--c-bg-card);
-      border: 1px solid var(--c-border-subtle);
-      border-radius: 6px;
-      padding: 6px 8px;
-      margin-bottom: 4px;
-
-      .attack-left {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-
-        .attack-icon {
-          border-radius: 3px;
-          border: 1px solid var(--c-border-card);
-        }
-
-        .attack-details {
-          display: flex;
-          flex-direction: column;
-
-          .attack-title {
-            font-size: 0.82rem;
-            font-weight: 800;
-            color: var(--c-text-primary);
-          }
-          .attack-sub {
-            font-size: 0.62rem;
-            color: var(--c-text-muted);
-            text-transform: uppercase;
-            font-weight: 600;
-          }
-        }
-      }
-
-      .attack-right {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-
-        .dmg-tag {
-          color: var(--c-neon-red);
-          font-size: 0.72rem;
-          font-weight: 800;
-          .dmg-num { font-size: 1rem; }
-        }
-
-        .btn-action-icon {
-          background: transparent;
-          border: none;
-          color: var(--c-text-muted);
-          cursor: pointer;
-
-          &:hover { color: var(--c-text-primary); }
-          &.btn-trash:hover { color: var(--c-neon-red); }
-          &.btn-roll-d20 { color: var(--c-neon-red); font-size: 0.95rem; }
-        }
-      }
-    }
-
-    .armor-entry-card {
-      background: var(--c-bg-card);
-      border: 1px solid var(--c-border-subtle);
-      border-radius: 6px;
-      padding: 6px 8px;
-
-      .armor-header-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .armor-title-wrap {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-
-          .armor-name { font-size: 0.82rem; font-weight: 800; color: var(--c-text-primary); }
-          .tag-status.active {
-            background: rgba(46, 196, 182, 0.2);
-            color: var(--c-neon-green);
-            font-size: 0.62rem;
-            font-weight: 800;
-            padding: 1px 5px;
-            border-radius: 3px;
-          }
-        }
-      }
-
-      .armor-modifiers-tags {
-        display: flex;
-        gap: 4px;
-        margin-top: 4px;
-
-        .pill-mod {
-          font-size: 0.62rem;
-          font-weight: 800;
-          padding: 1px 5px;
-          border-radius: 3px;
-
-          &.positive {
-            background: rgba(46, 196, 182, 0.15);
-            color: var(--c-neon-green);
-            border: 1px solid rgba(46, 196, 182, 0.3);
-          }
-          &.negative {
-            background: rgba(230, 57, 70, 0.15);
-            color: var(--c-neon-red);
-            border: 1px solid rgba(230, 57, 70, 0.3);
-          }
-        }
-      }
-    }
-
-    .ammo-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--c-bg-card);
-      border: 1px solid var(--c-border-subtle);
-      border-radius: 6px;
-      padding: 4px 8px;
-
-      .ammo-left {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        .ammo-name { font-size: 0.82rem; font-weight: 800; color: var(--c-text-primary); }
-      }
-
-      .ammo-counter {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-
-        .btn-step {
-          background: var(--c-bg-input);
-          border: 1px solid var(--c-border-card);
-          color: var(--c-text-primary);
-          border-radius: 3px;
-          width: 20px;
-          height: 20px;
-          cursor: pointer;
-          font-weight: 800;
-        }
-
-        .ammo-val {
-          font-weight: 800;
-          font-size: 0.9rem;
-          min-width: 20px;
-          text-align: center;
-          color: var(--c-text-primary);
-        }
+      &.alt-active .armor-entry-card .btn-archive-toggle {
+        .archive-icon { display: none !important; }
+        .trash-icon { display: inline-block !important; color: var(--c-neon-red) !important; }
       }
     }
   }
-}

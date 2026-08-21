@@ -73,6 +73,12 @@
         font-size: 0.85rem;
         box-sizing: border-box;
 
+        &::placeholder {
+          color: var(--c-text-muted, #64748b) !important;
+          opacity: 0.75;
+          font-style: italic;
+        }
+
         &:focus {
           outline: none;
           border-color: var(--c-neon-cyan, #00f2fe) !important;

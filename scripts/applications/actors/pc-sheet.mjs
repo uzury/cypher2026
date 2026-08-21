@@ -2,6 +2,8 @@ import { sortSkills, sortAbilities } from "./pc-sheet-sorting.mjs";
 import { setupPcSheetListeners } from "./pc-sheet-listeners.mjs";
 import { promptSkillDialog } from "../dialogs/skill-dialog.mjs";
 import { promptAbilityDialog } from "../dialogs/ability-dialog.mjs";
+import { promptAttackDialog } from "../dialogs/attack-dialog.mjs";
+import { promptArmorDialog } from "../dialogs/armor-dialog.mjs";
 import { promptFixedSkillDialog } from "../dialogs/fixed-skill-dialog.mjs";
 import { promptDamageDialog } from "../dialogs/damage-prompt-dialog.mjs";
 import { promptPostItemToChat } from "../dialogs/post-chat-dialog.mjs";
@@ -28,6 +30,9 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       rollStat: CypherPcSheet.#onRollStat,
       rollSkillItem: CypherPcSheet.#onRollSkillItem,
       rollAbilityItem: CypherPcSheet.#onRollAbilityItem,
+      rollAttackItem: CypherPcSheet.#onRollAttackItem,
+      rollArmorDefense: CypherPcSheet.#onRollArmorDefense,
+      openBlockWoundDialog: CypherPcSheet.#onOpenBlockWoundDialog,
       rollFixedSkill: CypherPcSheet.#onRollFixedSkill,
       rollRecoveryCategory: CypherPcSheet.#onRollRecoveryCategory,
       resetAllRecoveries: CypherPcSheet.#onResetAllRecoveries,
@@ -39,6 +44,8 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       openAddLastingDamageDialog: CypherPcSheet.#onOpenAddLastingDamageDialog,
       healLastingDamage: CypherPcSheet.#onHealLastingDamage,
       openDamageChatPrompt: CypherPcSheet.#onOpenDamageChatPrompt,
+      openAttackChatPrompt: CypherPcSheet.#onOpenAttackChatPrompt,
+      openArmorChatPrompt: CypherPcSheet.#onOpenArmorChatPrompt,
       openFixedSkillDialog: CypherPcSheet.#onOpenFixedSkillDialog,
       openSkillChatPrompt: CypherPcSheet.#onOpenSkillChatPrompt,
       openAbilityChatPrompt: CypherPcSheet.#onOpenAbilityChatPrompt,
@@ -48,6 +55,12 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       cycleAbilitySort: CypherPcSheet.#onCycleAbilitySort,
       openAddAbilityDialog: CypherPcSheet.#onOpenAddAbilityDialog,
       openEditAbilityDialog: CypherPcSheet.#onOpenEditAbilityDialog,
+      openAddAttackDialog: CypherPcSheet.#onOpenAddAttackDialog,
+      openEditAttackDialog: CypherPcSheet.#onOpenEditAttackDialog,
+      openAddArmorDialog: CypherPcSheet.#onOpenAddArmorDialog,
+      openEditArmorDialog: CypherPcSheet.#onOpenEditArmorDialog,
+      toggleArmorFreelyUse: CypherPcSheet.#onToggleArmorFreelyUse,
+      toggleShieldWound: CypherPcSheet.#onToggleShieldWound,
       toggleQuickRoll: CypherPcSheet.#onToggleQuickRoll,
       adjustHeaderStat: CypherPcSheet.#onAdjustHeaderStat,
       adjustPool: CypherPcSheet.#onAdjustPool,
@@ -62,7 +75,8 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       toggleRecovery: CypherPcSheet.#onToggleRecovery,
       itemCreate: CypherPcSheet.#onItemCreate,
       itemEdit: CypherPcSheet.#onItemEdit,
-      itemDelete: CypherPcSheet.#onItemDelete
+      itemDelete: CypherPcSheet.#onItemDelete,
+      itemArchiveOrDelete: CypherPcSheet.#onItemArchiveOrDelete
     }
   };
 
@@ -104,15 +118,22 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const activeDamage = damageItems.filter((i) => !i.system?.archived);
     const archivedDamage = damageItems.filter((i) => i.system?.archived);
 
+    const allAttacks = items.filter((i) => (i.type === "weapon" || (i.type === "ability" && i.system?.isAttack)));
+    const activeAttacks = allAttacks.filter((i) => !i.system?.archived);
+    const archivedAttacks = allAttacks.filter((i) => i.system?.archived);
+
+    const allArmors = items.filter((i) => i.type === "armor");
+    const activeArmors = allArmors.filter((i) => !i.system?.archived);
+    const archivedArmors = allArmors.filter((i) => i.system?.archived);
+
     context.categorizedItems = {
       skills: sortSkills(items, skillSortMode),
       abilities: sortAbilities(items, abilitySortMode),
       damageItems: [...activeDamage, ...archivedDamage],
-      attacks: items.filter((i) => (i.type === "weapon" || i.type === "ability") && !i.system?.archived),
+      attacks: [...activeAttacks, ...archivedAttacks],
+      armors: [...activeArmors, ...archivedArmors],
       weapons: items.filter((i) => i.type === "weapon" && !i.system?.archived),
-      armors: items.filter((i) => i.type === "armor" && !i.system?.archived),
-      equipment: items.filter((i) => i.type === "equipment" && !i.system?.isDamage && !i.name.toLowerCase().includes("ammo") && !i.system?.archived),
-      ammo: items.filter((i) => i.type === "equipment" && i.name.toLowerCase().includes("ammo")),
+      equipment: items.filter((i) => i.type === "equipment" && !i.system?.isDamage && !i.system?.archived),
       cyphers: items.filter((i) => i.type === "cypher" && !i.system?.archived)
     };
 
@@ -167,6 +188,16 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     if (item) promptPostItemToChat({ actor: this.actor, item });
   }
 
+  static #onOpenAttackChatPrompt(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (item) promptPostItemToChat({ actor: this.actor, item });
+  }
+
+  static #onOpenArmorChatPrompt(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (item) promptPostItemToChat({ actor: this.actor, item });
+  }
+
   static #onOpenDamageChatPrompt(event, target) {
     const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
     if (item) promptPostItemToChat({ actor: this.actor, item });
@@ -188,6 +219,224 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static #onOpenEditAbilityDialog(event, target) {
     const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
     if (item) promptAbilityDialog({ actor: this.actor, item });
+  }
+
+  static #onOpenAddAttackDialog() {
+    promptAttackDialog({ actor: this.actor });
+  }
+
+  static #onOpenEditAttackDialog(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (item) {
+      if (item.type === "ability") promptAbilityDialog({ actor: this.actor, item });
+      else promptAttackDialog({ actor: this.actor, item });
+    }
+  }
+
+  static #onOpenAddArmorDialog() {
+    promptArmorDialog({ actor: this.actor });
+  }
+
+  static #onOpenEditArmorDialog(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (item) promptArmorDialog({ actor: this.actor, item });
+  }
+
+  static async #onToggleArmorFreelyUse(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (!item) return;
+    const current = Boolean(item.system?.freelyUse);
+    await item.update({ "system.freelyUse": !current });
+  }
+
+  static async #onToggleShieldWound(event, target) {
+    const itemId = target.dataset.itemId || target.closest("[data-item-id]")?.dataset.itemId;
+    const item = this.actor.items.get(itemId);
+    if (!item || item.system?.armorType !== "shield") return;
+
+    const severity = target.dataset.severity;
+    const index = parseInt(target.dataset.index, 10);
+    if (!severity || !index) return;
+
+    const currentWounds = foundry.utils.duplicate(item.system?.wounds || {
+      minor: { current: 0, max: 3 },
+      moderate: { current: 0, max: 2 },
+      major: { current: 0, max: 1 }
+    });
+
+    const currentVal = currentWounds[severity]?.current ?? 0;
+    const nextVal = currentVal === index ? index - 1 : index;
+    currentWounds[severity].current = nextVal;
+
+    if (severity === "major" && nextVal >= 1) {
+      await item.update({
+        "system.wounds": currentWounds,
+        "system.archived": true
+      });
+      ui.notifications.warn(game.i18n.format("CYPHER2026.Armor.ShieldBroken", { name: item.name }));
+    } else {
+      await item.update({ "system.wounds": currentWounds });
+    }
+  }
+
+  static async #onOpenBlockWoundDialog(event, target) {
+    const itemId = target.dataset.itemId || target.closest("[data-item-id]")?.dataset.itemId;
+    const shield = this.actor.items.get(itemId);
+    if (!shield || shield.system?.armorType !== "shield") return;
+
+    const dialog = new foundry.applications.api.DialogV2({
+      window: { title: game.i18n.format("CYPHER2026.Shield.BlockWoundDialogTitle", { name: shield.name }) },
+      content: `
+        <form class="cypher-dialog-form">
+          <p style="font-size:0.85rem; margin-bottom:6px;">${game.i18n.localize("CYPHER2026.Shield.BlockWoundPrompt")}</p>
+          <div class="radio-options-list">
+            <label class="radio-option-item">
+              <input type="radio" name="severity" value="minor" checked />
+              <span><strong>1 Minor Wound</strong></span>
+            </label>
+            <label class="radio-option-item">
+              <input type="radio" name="severity" value="moderate" />
+              <span><strong>1 Moderate Wound</strong></span>
+            </label>
+            <label class="radio-option-item">
+              <input type="radio" name="severity" value="major" />
+              <span><strong>1 Major Wound</strong></span>
+            </label>
+          </div>
+        </form>
+      `,
+      buttons: [
+        {
+          action: "block",
+          label: game.i18n.localize("CYPHER2026.Shield.BlockWoundBtn"),
+          icon: "fas fa-shield-heart",
+          default: true,
+          callback: async (event, button) => {
+            const form = button.form;
+            const chosenSeverity = form.severity.value; // "minor", "moderate", "major"
+
+            const currentWounds = foundry.utils.duplicate(shield.system?.wounds || {
+              minor: { current: 0, max: 3 },
+              moderate: { current: 0, max: 2 },
+              major: { current: 0, max: 1 }
+            });
+
+            // Lógica de Absorção de Ferimentos com Rollover oficial do Cypher
+            let absorbedSeverity = chosenSeverity;
+            if (chosenSeverity === "minor") {
+              if (currentWounds.minor.current < 3) {
+                currentWounds.minor.current += 1;
+              } else if (currentWounds.moderate.current < 2) {
+                currentWounds.moderate.current += 1;
+                absorbedSeverity = "moderate";
+              } else {
+                currentWounds.major.current += 1;
+                absorbedSeverity = "major";
+              }
+            } else if (chosenSeverity === "moderate") {
+              if (currentWounds.moderate.current < 2) {
+                currentWounds.moderate.current += 1;
+              } else {
+                currentWounds.major.current += 1;
+                absorbedSeverity = "major";
+              }
+            } else if (chosenSeverity === "major") {
+              currentWounds.major.current += 1;
+            }
+
+            const isBroken = currentWounds.major.current >= 1;
+
+            await shield.update({
+              "system.wounds": currentWounds,
+              "system.archived": isBroken ? true : Boolean(shield.system?.archived)
+            });
+
+            const chosenLabel = game.i18n.localize(`CYPHER2026.Wounds.${chosenSeverity.charAt(0).toUpperCase() + chosenSeverity.slice(1)}`);
+            let rolloverText = "";
+            if (absorbedSeverity !== chosenSeverity) {
+              const targetLabel = game.i18n.localize(`CYPHER2026.Wounds.${absorbedSeverity.charAt(0).toUpperCase() + absorbedSeverity.slice(1)}`);
+              rolloverText = game.i18n.format("CYPHER2026.Shield.RolloverNotice", { target: targetLabel });
+            }
+
+            const brokenAlert = isBroken
+              ? `<br/><span class="chat-tag-pill highlight">${game.i18n.localize("CYPHER2026.Shield.BrokenChatAlert")}</span>`
+              : "";
+
+            await ChatMessage.create({
+              speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+              content: `
+                <div class="cypher-chat-card item-card">
+                  <div class="chat-card-header">
+                    <img src="${shield.img}" width="28" height="28" class="chat-item-icon" />
+                    <div class="chat-header-text">
+                      <h3 class="chat-card-title">${game.i18n.localize("CYPHER2026.Shield.BlockWoundChatTitle")}</h3>
+                      <span class="chat-card-subtitle">${shield.name}</span>
+                    </div>
+                  </div>
+                  <div class="chat-card-description">
+                    ${game.i18n.format("CYPHER2026.Shield.BlockWoundChatMsg", { name: shield.name, severity: chosenLabel })}${rolloverText}${brokenAlert}
+                  </div>
+                </div>
+              `
+            });
+
+            if (isBroken) {
+              ui.notifications.warn(game.i18n.format("CYPHER2026.Armor.ShieldBroken", { name: shield.name }));
+            }
+          }
+        },
+        {
+          action: "cancel",
+          label: game.i18n.localize("CYPHER2026.Common.Cancel"),
+          icon: "fas fa-times"
+        }
+      ]
+    });
+
+    dialog.render({ force: true });
+  }
+
+  static async #onRollArmorDefense(event, target) {
+    const mode = target.dataset.mode || "block"; // "block" (Might) ou "dodge" (Speed)
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (!item) return;
+
+    const isBlock = mode === "block";
+    const statKey = isBlock ? "might" : "speed";
+    const statObj = this.actor.system.stats[statKey];
+
+    const armorType = item.system?.armorType || "light";
+    const stepsMap = { light: 1, medium: 2, heavy: 3, shield: 0 };
+    const steps = stepsMap[armorType] ?? 0;
+
+    const roll = new Roll("1d20");
+    await roll.evaluate();
+
+    const title = isBlock
+      ? game.i18n.localize("CYPHER2026.Armor.RollBlock")
+      : game.i18n.localize("CYPHER2026.Armor.RollDodge");
+
+    const modTag = isBlock
+      ? (steps > 0 ? `<span class="chat-tag-pill accent">${game.i18n.format("CYPHER2026.Armor.BlockMod", { steps, stepLabel: steps > 1 ? game.i18n.localize("CYPHER2026.Armor.StepPlural") : game.i18n.localize("CYPHER2026.Armor.StepSingular") })}</span>` : "")
+      : (steps > 0 ? `<span class="chat-tag-pill highlight">${game.i18n.format("CYPHER2026.Armor.DodgeMod", { steps, stepLabel: steps > 1 ? game.i18n.localize("CYPHER2026.Armor.StepPlural") : game.i18n.localize("CYPHER2026.Armor.StepSingular") })}</span>` : "");
+
+    await roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor: `
+        <div class="cypher-chat-card item-card">
+          <div class="chat-card-header">
+            <img src="${item.img}" width="28" height="28" class="chat-item-icon" />
+            <div class="chat-header-text">
+              <h3 class="chat-card-title">${title}</h3>
+              <span class="chat-card-subtitle">${item.name} (${game.i18n.localize("CYPHER2026.Stats." + statKey)}: ${statObj.current} | Edge: ${statObj.edge})</span>
+            </div>
+          </div>
+          <div class="chat-card-description">
+            ${modTag}
+          </div>
+        </div>
+      `
+    });
   }
 
   static #onOpenRallyDialog() {
@@ -509,6 +758,52 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     });
   }
 
+  static async #onRollAttackItem(event, target) {
+    const attack = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (!attack) return;
+
+    const roll = new Roll("1d20");
+    await roll.evaluate();
+
+    const damage = attack.system?.damage ?? 4;
+    const rankKey = attack.system?.rank || "practiced";
+    const rangeKey = attack.system?.range || (attack.type === "ability" ? "short" : "immediate");
+    const rankLabel = game.i18n.localize(`CYPHER2026.SkillRank.${rankKey}`);
+    const rangeLabel = game.i18n.localize(`CYPHER2026.Range.${rangeKey}`);
+
+    let subtitle = "";
+
+    if (attack.type === "ability") {
+      const originKey = String(attack.system?.origin || "type").toLowerCase();
+      const originLoc = game.i18n.localize("CYPHER2026.AbilityOrigin." + originKey);
+      const costText = (attack.system?.cost > 0 && attack.system?.pool !== "none")
+        ? ` · ${attack.system.cost} ${game.i18n.localize("CYPHER2026.Stats." + attack.system.pool)}`
+        : "";
+      subtitle = `${originLoc} · TIER ${attack.system.tier || 1} · ${rangeLabel} · ${rankLabel} · ${damage} ${game.i18n.localize("CYPHER2026.Combat.DmgTag")}${costText}`;
+    } else {
+      const weaponCatText = (attack.system?.weaponCategory && attack.system.weaponCategory !== "no")
+        ? `${game.i18n.localize("CYPHER2026.WeaponCategory." + attack.system.weaponCategory)} · `
+        : "";
+      subtitle = `${weaponCatText}${rankLabel} · ${rangeLabel} · ${damage} ${game.i18n.localize("CYPHER2026.Combat.DmgTag")}`;
+    }
+
+    await roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor: `
+        <div class="cypher-chat-card item-card">
+          <div class="chat-card-header">
+            <img src="${attack.img}" width="28" height="28" class="chat-item-icon" />
+            <div class="chat-header-text">
+              <h3 class="chat-card-title">${attack.name}</h3>
+              <span class="chat-card-subtitle">${subtitle}</span>
+            </div>
+          </div>
+          ${attack.system?.description ? `<div class="chat-card-description">${attack.system.description}</div>` : ""}
+        </div>
+      `
+    });
+  }
+
   static async #onRollFixedSkill(event, target) {
     const fixedSkill = this.actor.system.fixedSkills?.[target.dataset.skillKey];
     if (!fixedSkill) return;
@@ -580,6 +875,26 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static #onItemEdit(event, target) {
     const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
     item?.sheet?.render(true);
+  }
+
+  static async #onItemArchiveOrDelete(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (!item) return;
+
+    if (event.altKey) {
+      const confirmed = await foundry.applications.api.DialogV2.confirm({
+        window: { title: game.i18n.format("CYPHER2026.Item.DeleteTitle", { name: item.name }) },
+        content: `<p>${game.i18n.format("CYPHER2026.Item.DeleteConfirm", { name: item.name })}</p><p class="cypher-dialog-tip">${game.i18n.localize("CYPHER2026.Item.DeleteTip")}</p>`,
+        rejectClose: false
+      });
+      if (confirmed) await item.delete();
+      return;
+    }
+
+    const isArchived = Boolean(item.system?.archived);
+    await item.update({ "system.archived": !isArchived });
+    const notifyKey = !isArchived ? "CYPHER2026.Item.ArchivedNotification" : "CYPHER2026.Item.UnarchivedNotification";
+    ui.notifications.info(game.i18n.format(notifyKey, { name: item.name }));
   }
 
   static async #onItemDelete(event, target) {

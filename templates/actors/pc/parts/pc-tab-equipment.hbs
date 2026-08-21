@@ -1,25 +1,213 @@
-<div class="tab-pane-content {{#unless (eq activeTab 'equipment')}}hidden{{/unless}}" data-application-part="tabEquipment">
-  <div class="sub-panel-card">
+<div class="tab-pane-content equipment-tab-content {{#unless (eq activeTab 'equipment')}}hidden{{/unless}}" data-application-part="tabEquipment">
+
+  <!-- BARRA SUPERIOR: CURRENCY (COM STEPPERS) E CYPHER LIMIT EM 1 LINHA SÓ -->
+  <div class="sub-panel-card currency-top-panel">
+  <div class="currency-left-group">
+  <span class="currency-section-title"><i class="fas fa-coins"></i> {{localize "CYPHER2026.Equipment.CurrencyHeading"}}</span>
+
+  <div class="currency-fields-row">
+  <!-- INEXPENSIVE -->
+  <div class="currency-tier-box">
+  <span class="tier-tag">{{localize "CYPHER2026.Currency.InexpensiveShort"}}</span>
+  <button type="button" class="btn-step-mini {{#if (lte system.currency.inexpensive 0)}}is-disabled{{/if}}" data-action="adjustCurrency" data-currency="inexpensive" data-delta="-1">-</button>
+  <input type="text" class="currency-num-input auto-math numeric-input" name="system.currency.inexpensive" value="{{system.currency.inexpensive}}" data-current-val="{{system.currency.inexpensive}}" title="{{localize 'CYPHER2026.Currency.Inexpensive'}}" autocomplete="off" />
+  <button type="button" class="btn-step-mini" data-action="adjustCurrency" data-currency="inexpensive" data-delta="1">+</button>
+  </div>
+
+  <!-- MODERATELY -->
+  <div class="currency-tier-box">
+  <span class="tier-tag">{{localize "CYPHER2026.Currency.ModeratelyShort"}}</span>
+  <button type="button" class="btn-step-mini {{#if (lte system.currency.moderately 0)}}is-disabled{{/if}}" data-action="adjustCurrency" data-currency="moderately" data-delta="-1">-</button>
+  <input type="text" class="currency-num-input auto-math numeric-input" name="system.currency.moderately" value="{{system.currency.moderately}}" data-current-val="{{system.currency.moderately}}" title="{{localize 'CYPHER2026.Currency.Moderately'}}" autocomplete="off" />
+  <button type="button" class="btn-step-mini" data-action="adjustCurrency" data-currency="moderately" data-delta="1">+</button>
+  </div>
+
+  <!-- EXPENSIVE -->
+  <div class="currency-tier-box">
+  <span class="tier-tag">{{localize "CYPHER2026.Currency.ExpensiveShort"}}</span>
+  <button type="button" class="btn-step-mini {{#if (lte system.currency.expensive 0)}}is-disabled{{/if}}" data-action="adjustCurrency" data-currency="expensive" data-delta="-1">-</button>
+  <input type="text" class="currency-num-input auto-math numeric-input" name="system.currency.expensive" value="{{system.currency.expensive}}" data-current-val="{{system.currency.expensive}}" title="{{localize 'CYPHER2026.Currency.Expensive'}}" autocomplete="off" />
+  <button type="button" class="btn-step-mini" data-action="adjustCurrency" data-currency="expensive" data-delta="1">+</button>
+  </div>
+
+  <!-- VERY EXPENSIVE -->
+  <div class="currency-tier-box">
+  <span class="tier-tag">{{localize "CYPHER2026.Currency.VeryExpensiveShort"}}</span>
+  <button type="button" class="btn-step-mini {{#if (lte system.currency.veryExpensive 0)}}is-disabled{{/if}}" data-action="adjustCurrency" data-currency="veryExpensive" data-delta="-1">-</button>
+  <input type="text" class="currency-num-input auto-math numeric-input" name="system.currency.veryExpensive" value="{{system.currency.veryExpensive}}" data-current-val="{{system.currency.veryExpensive}}" title="{{localize 'CYPHER2026.Currency.VeryExpensive'}}" autocomplete="off" />
+  <button type="button" class="btn-step-mini" data-action="adjustCurrency" data-currency="veryExpensive" data-delta="1">+</button>
+  </div>
+
+  <!-- EXORBITANT -->
+  <div class="currency-tier-box">
+  <span class="tier-tag">{{localize "CYPHER2026.Currency.ExorbitantShort"}}</span>
+  <button type="button" class="btn-step-mini {{#if (lte system.currency.exorbitant 0)}}is-disabled{{/if}}" data-action="adjustCurrency" data-currency="exorbitant" data-delta="-1">-</button>
+  <input type="text" class="currency-num-input auto-math numeric-input" name="system.currency.exorbitant" value="{{system.currency.exorbitant}}" data-current-val="{{system.currency.exorbitant}}" title="{{localize 'CYPHER2026.Currency.Exorbitant'}}" autocomplete="off" />
+  <button type="button" class="btn-step-mini" data-action="adjustCurrency" data-currency="exorbitant" data-delta="1">+</button>
+  </div>
+  </div>
+  </div>
+
+  <!-- CYPHER LIMIT: MOSTRA ATUAIS / LIMITE BASE -->
+  <div class="cypher-limit-tracker-box">
+  <span class="limit-label">{{localize "CYPHER2026.Equipment.CypherLimit"}}</span>
+  <div class="limit-controls-row {{#if isOverCypherLimit}}over-limit{{/if}}">
+  <span class="limit-current-val" title="{{localize 'CYPHER2026.Equipment.CurrentCyphers'}}">{{cypherCount}}</span>
+  <span class="limit-divider">/</span>
+  <span class="limit-max-display" title="{{localize 'CYPHER2026.Equipment.MaxCyphers'}}">{{cypherLimit}}</span>
+  </div>
+  </div>
+  </div>
+
+  <!-- GRID DE CONTEÚDO: ESQUERDA (EQUIPMENT) | DIREITA (CYPHERS & ARTIFACTS) -->
+  <div class="equipment-layout-grid">
+
+  <!-- COLUNA ESQUERDA: EQUIPMENT -->
+  <div class="equipment-col-left">
+  <div class="sub-panel-card book-callout-border">
   <div class="panel-card-header">
   <div>
-  <span class="sub-title-tag">INVENTORY</span>
-  <h3 class="panel-heading">EQUIPMENT & CYPHERS</h3>
+  <span class="sub-title-tag">{{localize "CYPHER2026.Equipment.Tag"}}</span>
+  <h3 class="panel-heading">{{localize "CYPHER2026.Equipment.Heading"}}</h3>
   </div>
-  <button type="button" class="btn-add-circle" data-action="itemCreate" data-type="equipment"><i class="fas fa-plus"></i></button>
+  <button type="button" class="btn-add-circle" data-action="openAddEquipmentDialog" title="{{localize 'CYPHER2026.Dialog.AddEquipmentTitle'}}">
+  <i class="fas fa-plus"></i>
+  </button>
   </div>
+
   <div class="panel-items-list">
   {{#each categorizedItems.equipment as |item|}}
-  <div class="attack-entry-card" data-item-id="{{item.id}}">
-  <span class="attack-title">{{item.name}}</span>
-  <div class="attack-right">
-  <button type="button" class="btn-action-icon" data-action="itemEdit"><i class="fas fa-edit"></i></button>
-  <button type="button" class="btn-action-icon btn-trash" data-action="itemDelete"><i class="fas fa-trash"></i></button>
+  <div class="equipment-entry-card {{#if item.system.archived}}is-archived{{/if}}"
+  data-item-id="{{item.id}}"
+  data-mouse-tooltip="<div class='tooltip-header'>{{item.name}}{{#if item.system.archived}} ({{localize 'CYPHER2026.Skills.ArchivedBadge'}}){{/if}}</div><div class='tooltip-content'>{{item.system.description}}</div>">
+
+  <div class="eq-left" data-action="openEquipmentChatPrompt" title="{{localize 'CYPHER2026.Common.PostToChat'}}" style="cursor:pointer;">
+  <img class="eq-icon" src="{{item.img}}" width="24" height="24" alt="{{item.name}}" />
+  <span class="eq-name">{{item.name}}</span>
+  {{#if (gt item.system.quantity 1)}}
+  <span class="eq-qty-pill">x{{item.system.quantity}}</span>
+  {{/if}}
+  </div>
+
+  <div class="eq-right">
+  <button type="button" class="btn-action-icon" data-action="openEditEquipmentDialog" title="{{localize 'CYPHER2026.Common.Edit'}}">
+  <i class="fas fa-edit"></i>
+  </button>
+  <button type="button" class="btn-action-icon btn-archive-toggle" data-action="itemArchiveOrDelete" title="{{#if item.system.archived}}{{localize 'CYPHER2026.Common.DeleteOrUnarchive'}}{{else}}{{localize 'CYPHER2026.Common.DeleteOrArchive'}}{{/if}}">
+  <i class="fas fa-box-archive archive-icon"></i>
+  <i class="fas fa-trash trash-icon"></i>
+  </button>
   </div>
   </div>
   {{else}}
-  <div class="empty-placeholder">{{localize "CYPHER2026.Common.NoItems"}}</div>
+  <div class="empty-placeholder">{{localize "CYPHER2026.Equipment.NoEquipment"}}</div>
   {{/each}}
   </div>
   </div>
   </div>
-  
+
+  <!-- COLUNA DIREITA: CYPHERS & ARTIFACTS -->
+  <div class="equipment-col-right">
+
+  <!-- 1. CYPHERS CARD -->
+  <div class="sub-panel-card book-callout-border">
+  <div class="panel-card-header">
+  <div>
+  <span class="sub-title-tag">{{localize "CYPHER2026.Cyphers.Tag"}}</span>
+  <h3 class="panel-heading">{{localize "CYPHER2026.Cyphers.Heading"}}</h3>
+  </div>
+  <button type="button" class="btn-add-circle" data-action="openAddCypherDialog" title="{{localize 'CYPHER2026.Dialog.AddCypherTitle'}}">
+  <i class="fas fa-plus"></i>
+  </button>
+  </div>
+
+  <div class="panel-items-list">
+  {{#each categorizedItems.cyphers as |cypher|}}
+  <div class="cypher-entry-card {{#if cypher.system.archived}}is-archived{{/if}}"
+  data-item-id="{{cypher.id}}"
+  data-mouse-tooltip="<div class='tooltip-header'>{{cypher.name}}{{#if cypher.system.archived}} ({{localize 'CYPHER2026.Skills.ArchivedBadge'}}){{/if}}</div><div class='tooltip-content'>{{cypher.system.description}}</div>">
+
+  <div class="cypher-left" data-action="openCypherChatPrompt" title="{{localize 'CYPHER2026.Common.PostToChat'}}" style="cursor:pointer;">
+  <img class="cypher-icon" src="{{cypher.img}}" width="24" height="24" alt="{{cypher.name}}" />
+  <div class="cypher-info-wrap">
+  <span class="cypher-name">{{cypher.name}}</span>
+  {{#if cypher.system.level}}
+  <span class="cypher-level-badge">{{localize "CYPHER2026.Common.LevelShort"}} {{cypher.system.level}}</span>
+  {{/if}}
+  </div>
+  </div>
+
+  <div class="cypher-right">
+  <button type="button" class="btn-action-icon" data-action="openEditCypherDialog" title="{{localize 'CYPHER2026.Common.Edit'}}">
+  <i class="fas fa-edit"></i>
+  </button>
+  <button type="button" class="btn-action-icon btn-archive-toggle" data-action="itemArchiveOrDelete" title="{{#if cypher.system.archived}}{{localize 'CYPHER2026.Common.DeleteOrUnarchive'}}{{else}}{{localize 'CYPHER2026.Common.DeleteOrArchive'}}{{/if}}">
+  <i class="fas fa-box-archive archive-icon"></i>
+  <i class="fas fa-trash trash-icon"></i>
+  </button>
+  </div>
+  </div>
+  {{else}}
+  <div class="empty-placeholder">{{localize "CYPHER2026.Cyphers.NoCyphers"}}</div>
+  {{/each}}
+  </div>
+  </div>
+
+  <!-- 2. ARTIFACTS CARD -->
+  <div class="sub-panel-card book-callout-border">
+  <div class="panel-card-header">
+  <div>
+  <span class="sub-title-tag">{{localize "CYPHER2026.Artifacts.Tag"}}</span>
+  <h3 class="panel-heading">{{localize "CYPHER2026.Artifacts.Heading"}}</h3>
+  </div>
+  <button type="button" class="btn-add-circle" data-action="openAddArtifactDialog" title="{{localize 'CYPHER2026.Dialog.AddArtifactTitle'}}">
+  <i class="fas fa-plus"></i>
+  </button>
+  </div>
+
+  <div class="panel-items-list">
+  {{#each categorizedItems.artifacts as |artifact|}}
+  <div class="artifact-entry-card {{#if artifact.system.archived}}is-archived{{/if}}"
+  data-item-id="{{artifact.id}}"
+  data-mouse-tooltip="<div class='tooltip-header'>{{artifact.name}}{{#if artifact.system.archived}} ({{localize 'CYPHER2026.Skills.ArchivedBadge'}}){{/if}}</div><div class='tooltip-content'>{{artifact.system.description}}</div>">
+
+  <div class="artifact-left" data-action="openArtifactChatPrompt" title="{{localize 'CYPHER2026.Common.PostToChat'}}" style="cursor:pointer;">
+  <img class="artifact-icon" src="{{artifact.img}}" width="24" height="24" alt="{{artifact.name}}" />
+  <div class="artifact-info-wrap">
+  <span class="artifact-name">{{artifact.name}}</span>
+  <div class="artifact-sub-pills">
+  {{#if artifact.system.level}}
+  <span class="artifact-level-badge">{{localize "CYPHER2026.Common.LevelShort"}} {{artifact.system.level}}</span>
+  {{/if}}
+  {{#if artifact.system.depletion}}
+  <span class="artifact-depletion-badge">{{localize "CYPHER2026.Artifacts.DepletionShort"}}: {{artifact.system.depletion}}</span>
+  {{/if}}
+  </div>
+  </div>
+  </div>
+
+  <div class="artifact-right">
+  {{#if artifact.system.depletion}}
+  <button type="button" class="btn-action-icon btn-roll-d20" data-action="rollArtifactDepletion" title="{{localize 'CYPHER2026.Artifacts.RollDepletion'}}">
+  <i class="fas fa-dice-d20"></i>
+  </button>
+  {{/if}}
+  <button type="button" class="btn-action-icon" data-action="openEditArtifactDialog" title="{{localize 'CYPHER2026.Common.Edit'}}">
+  <i class="fas fa-edit"></i>
+  </button>
+  <button type="button" class="btn-action-icon btn-archive-toggle" data-action="itemArchiveOrDelete" title="{{#if artifact.system.archived}}{{localize 'CYPHER2026.Common.DeleteOrUnarchive'}}{{else}}{{localize 'CYPHER2026.Common.DeleteOrArchive'}}{{/if}}">
+  <i class="fas fa-box-archive archive-icon"></i>
+  <i class="fas fa-trash trash-icon"></i>
+  </button>
+  </div>
+  </div>
+  {{else}}
+  <div class="empty-placeholder">{{localize "CYPHER2026.Artifacts.NoArtifacts"}}</div>
+  {{/each}}
+  </div>
+  </div>
+
+  </div>
+  </div>
+
+  </div>

@@ -2,16 +2,16 @@
   <div class="sub-panel-card book-callout-border">
     <!-- TOPO: ORGANIZADOR + BARRA DE PESQUISA + ADICIONAR -->
     <div class="abilities-tab-toolbar">
-      <button type="button" class="btn-sort-abilities" data-action="cycleAbilitySort" title="Alternar Ordenação (A-Z, Z-A, Origem, Tier, Enabler)">
+      <button type="button" class="btn-sort-abilities" data-action="cycleAbilitySort" title="{{localize 'CYPHER2026.Abilities.SortTitle'}}">
         <i class="fas fa-arrow-down-short-wide"></i> {{abilitySortLabel}}
       </button>
 
       <div class="ability-search-box">
         <i class="fas fa-search search-icon"></i>
-        <input type="text" id="ability-search-input" placeholder="{{localize "CYPHER2026.Abilities.SearchPlaceholder"}}" autocomplete="off" />
+        <input type="text" id="ability-search-input" placeholder="{{localize 'CYPHER2026.Abilities.SearchPlaceholder'}}" autocomplete="off" />
       </div>
 
-      <button type="button" class="btn-add-ability-modal" data-action="openAddAbilityDialog" title="{{localize "CYPHER2026.Abilities.AddTitle"}}">
+      <button type="button" class="btn-add-ability-modal" data-action="openAddAbilityDialog" title="{{localize 'CYPHER2026.Abilities.AddTitle'}}">
         <i class="fas fa-plus"></i>
       </button>
     </div>
@@ -22,22 +22,26 @@
       <div class="ability-entry-row {{#if ability.system.archived}}is-archived{{/if}}" 
            data-item-id="{{ability.id}}"
            data-search-content="{{ability.name}} {{ability.system.description}} {{ability.originLabel}} tier {{ability.system.tier}} {{ability.system.kind}} {{ability.poolLabel}} {{ability.system.cost}}"
-           data-mouse-tooltip="<div class='tooltip-header'>{{ability.name}}{{#if ability.system.archived}} (ARQUIVADA){{/if}}</div><div class='tooltip-content'>{{ability.system.description}}</div>">
+           data-mouse-tooltip="<div class='tooltip-header'>{{ability.name}}{{#if ability.system.archived}} ({{localize 'CYPHER2026.Skills.ArchivedBadge'}}){{/if}}</div><div class='tooltip-content'>{{ability.system.description}}</div>">
         
-        <!-- COLUNA 1: ÍCONE E NOME (CLIQUE ENVIA O CARD AO CHAT) -->
-        <div class="ability-col-main" data-action="openAbilityChatPrompt" title="Clique para enviar o card da habilidade ao Chat">
+        <!-- COLUNA 1: ÍCONE E NOME -->
+        <div class="ability-col-main" data-action="openAbilityChatPrompt" title="{{localize 'CYPHER2026.Common.PostToChat'}}">
           <img class="ability-icon" src="{{ability.img}}" alt="{{ability.name}}" width="24" height="24" />
           <span class="ability-title-name">{{ability.name}}</span>
         </div>
 
-        <!-- COLUNA 2: CUSTO + POOL COMPLETO OU ENABLER -->
+        <!-- COLUNA 2: CUSTO + POOL / ENABLER / NONE -->
         <div class="ability-col-cost">
           {{#if (eq ability.system.kind "enabler")}}
-          <span class="ability-cost-badge enabler">ENABLER</span>
+            <span class="ability-cost-badge enabler">ENABLER</span>
+          {{else if (eq (lower ability.system.pool) "none")}}
+            <span class="ability-cost-badge none">
+              {{ability.poolLabel}}
+            </span>
           {{else}}
-          <span class="ability-cost-badge cost {{lower ability.system.pool}}">
-            {{ability.system.cost}} {{ability.poolLabel}}
-          </span>
+            <span class="ability-cost-badge {{lower ability.system.pool}}">
+              {{ability.system.cost}} {{ability.poolLabel}}
+            </span>
           {{/if}}
         </div>
 
@@ -55,22 +59,22 @@
           </span>
         </div>
 
-        <!-- COLUNA 5: AÇÕES (D20 PARA ROLAR DADO, EDITAR, LIXEIRA/ARQUIVAR) -->
+        <!-- COLUNA 5: AÇÕES -->
         <div class="ability-col-actions">
-          <button type="button" class="btn-ability-action btn-roll-ability" data-action="rollAbilityItem" title="Rolar Teste de {{ability.name}}">
+          <button type="button" class="btn-ability-action btn-roll-ability" data-action="rollAbilityItem" title="{{localize 'CYPHER2026.Header.RollTask'}}">
             <i class="fas fa-dice-d20"></i>
           </button>
-          <button type="button" class="btn-ability-action btn-edit-ability" data-action="openEditAbilityDialog" title="Editar Habilidade">
+          <button type="button" class="btn-ability-action btn-edit-ability" data-action="openEditAbilityDialog" title="{{localize 'CYPHER2026.Common.Edit'}}">
             <i class="fas fa-edit"></i>
           </button>
-          <button type="button" class="btn-ability-action btn-delete-ability" data-action="itemDelete" title="{{#if ability.system.archived}}Excluir Definitivamente (Alt+Clique para Desarquivar){{else}}Excluir Habilidade (Alt+Clique para Arquivar){{/if}}">
+          <button type="button" class="btn-ability-action btn-delete-ability" data-action="itemDelete" title="{{#if ability.system.archived}}{{localize 'CYPHER2026.Common.DeleteOrUnarchive'}}{{else}}{{localize 'CYPHER2026.Common.DeleteOrArchive'}}{{/if}}">
             <i class="fas fa-trash trash-icon"></i>
             <i class="fas fa-box-archive archive-icon"></i>
           </button>
         </div>
       </div>
       {{else}}
-      <div class="empty-placeholder">Nenhuma habilidade cadastrada. Clique no botão + ou arraste um Item de Habilidade para esta aba.</div>
+      <div class="empty-placeholder">{{localize "CYPHER2026.Abilities.NoAbilities"}}</div>
       {{/each}}
     </div>
   </div>
