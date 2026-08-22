@@ -59,6 +59,16 @@ export function promptAddLastingDamageDialog({ actor }) {
           const severity = form.severity.value;
           const description = form.description.value.trim();
 
+          const wound = actor.system.wounds[severity];
+          const current = Number(wound?.current ?? 0);
+          const max = Number(wound?.max ?? 0);
+          const lastingCount = Number(wound?.lastingCount ?? 0);
+
+          if (!wound || current >= max) {
+            ui.notifications.warn(game.i18n.localize("CYPHER2026.Damage.NoWoundCapacity"));
+            return;
+          }
+
           await actor.createEmbeddedDocuments("Item", [
             {
               name,
@@ -70,21 +80,18 @@ export function promptAddLastingDamageDialog({ actor }) {
                 severity,
                 value: 1,
                 description,
-                archived: false
+                archived: false,
+                woundApplied: true
               }
             }
           ]);
 
-          const currentWounds = actor.system.wounds[severity]?.current ?? 0;
-          const lastingWounds = actor.system.wounds[severity]?.lastingCount ?? 1;
-          const maxWounds = actor.system.wounds[severity]?.max ?? 3;
-          const nextWounds = Math.min(maxWounds, Math.max(currentWounds, lastingWounds));
-
           await actor.update({
-            [`system.wounds.${severity}.current`]: nextWounds
+            [`system.wounds.${severity}.current`]: current + 1,
+            [`system.wounds.${severity}.lastingCount`]: lastingCount + 1
           });
 
-          ui.notifications.info(game.i18n.format("CYPHER2026.Damage.Healed", { name }));
+          ui.notifications.info(game.i18n.format("CYPHER2026.Damage.Created", { name }));
         }
       },
       {
