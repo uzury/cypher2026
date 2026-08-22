@@ -1,10 +1,11 @@
+import { applyWound, removeNormalWound } from "../../domain/wounds/apply-wound.mjs";
+import { previewPoolSpend } from "../../domain/pools/calculate-pool-total.mjs";
+import { setupCombatWoundAlertLayout } from "../combat-alert-layout.mjs";
+
 /**
  * Configura todos os listeners reativos do DOM na ActorSheet.
  * @param {CypherPcSheet} sheet
  */
-import { applyWound, removeNormalWound } from "../../domain/wounds/apply-wound.mjs";
-import { previewPoolSpend } from "../../domain/pools/calculate-pool-total.mjs";
-
 export function setupPcSheetListeners(sheet) {
   const el = sheet.element;
   if (!el) return;
@@ -17,6 +18,7 @@ export function setupPcSheetListeners(sheet) {
   setupAltKeyListeners(el);
   setupAbilitySearch(el);
   setupRuleActionOverrides(sheet, el);
+  setupCombatWoundAlertLayout(el);
   setupCharacterArcTextInputs(sheet, el);
 }
 
@@ -93,8 +95,6 @@ function setupRuleActionOverrides(sheet, el) {
         return;
       }
 
-      // O clique do botão é a confirmação explícita de uso da Ability.
-      // O gasto ocorre uma única vez antes de delegar a rolagem existente.
       await sheet.actor.update({ [`system.stats.${pool}.current`]: preview.next });
       target.dataset.cypherRuleBypass = "true";
       target.click();
@@ -108,15 +108,8 @@ function setupCharacterArcTextInputs(sheet, el) {
     const syncArcText = async () => {
       const item = sheet.actor.items.get(textarea.dataset.itemId);
       if (!item) return;
-
-      await item.update({
-        system: {
-          ...item.system,
-          description: textarea.value ?? ""
-        }
-      });
+      await item.update({ system: { ...item.system, description: textarea.value ?? "" } });
     };
-
     textarea.addEventListener("change", syncArcText);
     textarea.addEventListener("blur", syncArcText);
   }
@@ -125,26 +118,19 @@ function setupCharacterArcTextInputs(sheet, el) {
 function setupScrollPreservation(sheet, el) {
   const pane = el.querySelector(".tab-pane-content:not(.hidden)");
   if (!pane) return;
-
   if (sheet._lastTabScroll !== undefined) {
     pane.scrollTop = sheet._lastTabScroll;
     requestAnimationFrame(() => {
       if (pane) pane.scrollTop = sheet._lastTabScroll;
     });
   }
-
-  pane.addEventListener("scroll", () => {
-    sheet._lastTabScroll = pane.scrollTop;
-  }, { passive: true });
+  pane.addEventListener("scroll", () => { sheet._lastTabScroll = pane.scrollTop; }, { passive: true });
 }
 
 function setupSentenceDropZones(sheet, el) {
   const dropZones = el.querySelectorAll("[data-sentence-drop]");
   for (const zone of dropZones) {
-    zone.addEventListener("dragover", (ev) => {
-      ev.preventDefault();
-      zone.classList.add("drag-over");
-    });
+    zone.addEventListener("dragover", (ev) => { ev.preventDefault(); zone.classList.add("drag-over"); });
     zone.addEventListener("dragleave", () => zone.classList.remove("drag-over"));
     zone.addEventListener("drop", async (ev) => {
       ev.preventDefault();
@@ -156,16 +142,13 @@ function setupSentenceDropZones(sheet, el) {
         if (data.type !== "Item" || !data.uuid) return;
         const item = await fromUuid(data.uuid);
         if (!item) return;
-
         const field = zone.dataset.sentenceDrop;
         if (field && item.type === field) {
           await sheet.actor.update({ [`system.sentence.${field}`]: item.name });
           const exists = sheet.actor.items.some((i) => i.name === item.name && i.type === item.type);
           if (!exists) await sheet.actor.createEmbeddedDocuments("Item", [item.toObject()]);
         }
-      } catch (err) {
-        console.error("Cypher 2026 | Erro no Drag & Drop de Sentence:", err);
-      }
+      } catch (err) { console.error("Cypher 2026 | Erro no Drag & Drop de Sentence:", err); }
     });
   }
 }
@@ -184,11 +167,8 @@ function setupTabDragAndDrop(sheet, el) {
         if (data.type !== "Item" || !data.uuid) return;
         const item = await fromUuid(data.uuid);
         if (!item) return;
-
         await sheet.actor.createEmbeddedDocuments("Item", [item.toObject()]);
-      } catch (err) {
-        console.error("Cypher 2026 | Erro no Drag & Drop de Item:", err);
-      }
+      } catch (err) { console.error("Cypher 2026 | Erro no Drag & Drop de Item:", err); }
     });
   }
 }
@@ -198,23 +178,16 @@ function setupNumericAutoSelectAndMath(sheet, el) {
   for (const input of inputs) {
     input.addEventListener("focus", () => input.select());
     input.addEventListener("mouseup", (ev) => {
-      if (document.activeElement !== input) {
-        ev.preventDefault();
-        input.select();
-      }
+      if (document.activeElement !== input) { ev.preventDefault(); input.select(); }
     });
-
     input.addEventListener("change", async (ev) => {
       const rawVal = input.value.trim();
       const currentNum = Number(input.dataset.currentVal ?? input.defaultValue ?? 0);
-
       if (/^[+\-*/]/.test(rawVal) || /[+\-*/]/.test(rawVal)) {
         ev.stopImmediatePropagation();
         ev.preventDefault();
-
         let expr = rawVal;
         if (/^[+\-*/]/.test(rawVal)) expr = currentNum + " " + rawVal;
-
         try {
           if (/^[0-9+\-*/().\s]+$/.test(expr)) {
             const result = Function('"use strict";return (' + expr + ")")();
@@ -225,9 +198,7 @@ function setupNumericAutoSelectAndMath(sheet, el) {
               if (path) await sheet.actor.update({ [path]: finalVal });
             }
           }
-        } catch (err) {
-          console.warn("Cypher 2026 | Expressão matemática inválida:", expr);
-        }
+        } catch (err) { console.warn("Cypher 2026 | Expressão matemática inválida:", expr); }
       }
     });
   }
@@ -236,14 +207,12 @@ function setupNumericAutoSelectAndMath(sheet, el) {
 function setupMouseAnchoredTooltips(el) {
   const tooltipTargets = el.querySelectorAll("[data-mouse-tooltip]");
   let tooltipEl = document.getElementById("cypher-mouse-tooltip");
-
   if (!tooltipEl) {
     tooltipEl = document.createElement("div");
     tooltipEl.id = "cypher-mouse-tooltip";
     tooltipEl.className = "cypher-floating-tooltip";
     document.body.appendChild(tooltipEl);
   }
-
   for (const target of tooltipTargets) {
     target.addEventListener("mouseenter", (ev) => {
       const text = target.getAttribute("data-mouse-tooltip");
@@ -253,44 +222,29 @@ function setupMouseAnchoredTooltips(el) {
       tooltipEl.style.left = (ev.clientX + 14) + "px";
       tooltipEl.style.top = (ev.clientY + 14) + "px";
     });
-
     target.addEventListener("mousemove", (ev) => {
       tooltipEl.style.left = (ev.clientX + 14) + "px";
       tooltipEl.style.top = (ev.clientY + 14) + "px";
     });
-
-    target.addEventListener("mouseleave", () => {
-      tooltipEl.style.display = "none";
-    });
+    target.addEventListener("mouseleave", () => { tooltipEl.style.display = "none"; });
   }
 }
 
 function setupAltKeyListeners(el) {
-  window.addEventListener("keydown", (ev) => {
-    if (ev.key === "Alt") el?.classList.add("alt-active");
-  });
-  window.addEventListener("keyup", (ev) => {
-    if (ev.key === "Alt") el?.classList.remove("alt-active");
-  });
-  window.addEventListener("blur", () => {
-    el?.classList.remove("alt-active");
-  });
+  window.addEventListener("keydown", (ev) => { if (ev.key === "Alt") el?.classList.add("alt-active"); });
+  window.addEventListener("keyup", (ev) => { if (ev.key === "Alt") el?.classList.remove("alt-active"); });
+  window.addEventListener("blur", () => { el?.classList.remove("alt-active"); });
 }
 
 function setupAbilitySearch(el) {
   const searchInput = el.querySelector("#ability-search-input");
   if (!searchInput) return;
-
   searchInput.addEventListener("input", (ev) => {
     const query = ev.target.value.toLowerCase().trim();
     const rows = el.querySelectorAll(".ability-entry-row");
     for (const row of rows) {
       const searchContent = (row.getAttribute("data-search-content") || "").toLowerCase();
-      if (!query || searchContent.includes(query)) {
-        row.classList.remove("is-filtered-out");
-      } else {
-        row.classList.add("is-filtered-out");
-      }
+      row.classList.toggle("is-filtered-out", Boolean(query) && !searchContent.includes(query));
     }
   });
 }
