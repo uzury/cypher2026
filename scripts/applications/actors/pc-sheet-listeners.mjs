@@ -2,14 +2,9 @@ import { applyWound, removeNormalWound } from "../../domain/wounds/apply-wound.m
 import { previewPoolSpend } from "../../domain/pools/calculate-pool-total.mjs";
 import { setupCombatWoundAlertLayout } from "../combat-alert-layout.mjs";
 
-/**
- * Configura todos os listeners reativos do DOM na ActorSheet.
- * @param {CypherPcSheet} sheet
- */
 export function setupPcSheetListeners(sheet) {
   const el = sheet.element;
   if (!el) return;
-
   setupScrollPreservation(sheet, el);
   setupSentenceDropZones(sheet, el);
   setupTabDragAndDrop(sheet, el);
@@ -30,7 +25,6 @@ function setupRuleActionOverrides(sheet, el) {
   el.addEventListener("click", async (event) => {
     const target = event.target.closest("[data-action]");
     if (!target) return;
-
     const action = target.dataset.action;
     if (!["adjustRecoveryDice", "adjustRecoveryBonus", "adjustWoundCurrent", "rollAbilityItem"].includes(action)) return;
     if (target.dataset.cypherRuleBypass === "true") {
@@ -43,18 +37,16 @@ function setupRuleActionOverrides(sheet, el) {
       event.stopImmediatePropagation();
       const current = Number(sheet.actor.system.recoveries.diceNum ?? 0);
       const delta = Number(target.dataset.delta ?? 0);
-      const next = Math.min(6, Math.max(0, current + delta));
-      await sheet.actor.update({ "system.recoveries.diceNum": next });
+      await sheet.actor.update({ "system.recoveries.diceNum": Math.min(6, Math.max(0, current + delta)) });
       return;
     }
 
     if (action === "adjustRecoveryBonus") {
       event.preventDefault();
       event.stopImmediatePropagation();
-      const current = Number(sheet.actor.system.recoveries.bonus ?? 0);
+      const current = Number(sheet.actor.system.recoveries.bonus ?? 1);
       const delta = Number(target.dataset.delta ?? 0);
-      const next = Math.min(99, Math.max(0, current + delta));
-      await sheet.actor.update({ "system.recoveries.bonus": next });
+      await sheet.actor.update({ "system.recoveries.bonus": Math.min(99, Math.max(1, current + delta)) });
       return;
     }
 
@@ -64,16 +56,10 @@ function setupRuleActionOverrides(sheet, el) {
       const severity = target.dataset.severity;
       const delta = Number(target.dataset.delta ?? 0);
       if (!["minor", "moderate", "major"].includes(severity)) return;
-
       const wounds = foundry.utils.duplicate(sheet.actor.system.wounds);
-      const result = delta > 0
-        ? applyWound(wounds, severity)
-        : { wounds: removeNormalWound(wounds, severity) };
-
+      const result = delta > 0 ? applyWound(wounds, severity) : { wounds: removeNormalWound(wounds, severity) };
       const updates = {};
-      for (const key of ["minor", "moderate", "major"]) {
-        updates[`system.wounds.${key}.current`] = result.wounds[key].current;
-      }
+      for (const key of ["minor", "moderate", "major"]) updates[`system.wounds.${key}.current`] = result.wounds[key].current;
       await sheet.actor.update(updates);
       return;
     }
@@ -84,17 +70,14 @@ function setupRuleActionOverrides(sheet, el) {
       const pool = ability?.system?.pool;
       const rawCost = Number(ability?.system?.cost ?? 0);
       if (!ability || isEnabler || !pool || pool === "none" || rawCost <= 0) return;
-
       event.preventDefault();
       event.stopImmediatePropagation();
-
       const stat = sheet.actor.system.stats[pool];
       const preview = previewPoolSpend(stat, rawCost);
       if (!preview.ok) {
         ui.notifications.warn(`${ability.name}: ${game.i18n.localize("CYPHER2026.Stats.ApplyDamage")} — ${preview.current}/${preview.cost}`);
         return;
       }
-
       await sheet.actor.update({ [`system.stats.${pool}.current`]: preview.next });
       target.dataset.cypherRuleBypass = "true";
       target.click();
@@ -120,9 +103,7 @@ function setupScrollPreservation(sheet, el) {
   if (!pane) return;
   if (sheet._lastTabScroll !== undefined) {
     pane.scrollTop = sheet._lastTabScroll;
-    requestAnimationFrame(() => {
-      if (pane) pane.scrollTop = sheet._lastTabScroll;
-    });
+    requestAnimationFrame(() => { if (pane) pane.scrollTop = sheet._lastTabScroll; });
   }
   pane.addEventListener("scroll", () => { sheet._lastTabScroll = pane.scrollTop; }, { passive: true });
 }
@@ -177,9 +158,7 @@ function setupNumericAutoSelectAndMath(sheet, el) {
   const inputs = el.querySelectorAll('input[type="text"].numeric-input, input[type="number"], input.auto-math');
   for (const input of inputs) {
     input.addEventListener("focus", () => input.select());
-    input.addEventListener("mouseup", (ev) => {
-      if (document.activeElement !== input) { ev.preventDefault(); input.select(); }
-    });
+    input.addEventListener("mouseup", (ev) => { if (document.activeElement !== input) { ev.preventDefault(); input.select(); } });
     input.addEventListener("change", async (ev) => {
       const rawVal = input.value.trim();
       const currentNum = Number(input.dataset.currentVal ?? input.defaultValue ?? 0);
@@ -222,10 +201,7 @@ function setupMouseAnchoredTooltips(el) {
       tooltipEl.style.left = (ev.clientX + 14) + "px";
       tooltipEl.style.top = (ev.clientY + 14) + "px";
     });
-    target.addEventListener("mousemove", (ev) => {
-      tooltipEl.style.left = (ev.clientX + 14) + "px";
-      tooltipEl.style.top = (ev.clientY + 14) + "px";
-    });
+    target.addEventListener("mousemove", (ev) => { tooltipEl.style.left = (ev.clientX + 14) + "px"; tooltipEl.style.top = (ev.clientY + 14) + "px"; });
     target.addEventListener("mouseleave", () => { tooltipEl.style.display = "none"; });
   }
 }
