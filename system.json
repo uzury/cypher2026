@@ -20,6 +20,7 @@
     "styles/applications/pc-navigation.css",
     "styles/components/tab-skills.css",
     "styles/components/tab-combat.css",
+    "styles/components/combat-wound-alerts.css",
     "styles/components/tab-overview.css",
     "styles/components/tab-abilities.css",
     "styles/components/tab-equipment.css",
