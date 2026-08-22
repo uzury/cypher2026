@@ -1,6 +1,28 @@
 const { TypeDataModel } = foundry.abstract;
 const fields = foundry.data.fields;
 
+function getItemPoolModifier(item, stat) {
+  if (item?.system?.archived) return 0;
+  const system = item?.system ?? {};
+  const direct = system.poolModifiers ?? system.modifiers?.pools ?? system.modifiers;
+  if (!direct) return 0;
+
+  if (Array.isArray(direct)) {
+    return direct.reduce((sum, modifier) => {
+      if (typeof modifier === "number") return sum + modifier;
+      if (String(modifier?.pool ?? modifier?.stat ?? "").toLowerCase() !== stat) return sum;
+      return sum + Number(modifier?.value ?? modifier?.amount ?? 0);
+    }, 0);
+  }
+
+  if (typeof direct === "object") {
+    const value = direct[stat] ?? direct[`${stat}Pool`] ?? direct[`${stat}Modifier`];
+    return Number(value ?? 0) || 0;
+  }
+
+  return 0;
+}
+
 export class PcDataModel extends TypeDataModel {
   static defineSchema() {
     return {
@@ -113,10 +135,12 @@ export class PcDataModel extends TypeDataModel {
 
   prepareDerivedData() {
     const actor = this.parent;
+    const items = actor?.items ? Array.from(actor.items.values()) : [];
 
     for (const stat of ["might", "speed", "intellect"]) {
       const data = this.stats[stat];
-      data.total = Math.max(0, Number(data.total ?? data.base ?? 0));
+      const itemModifier = items.reduce((sum, item) => sum + getItemPoolModifier(item, stat), 0);
+      data.total = Math.max(0, Number(data.total ?? data.base ?? 0) + itemModifier);
       data.current = Math.min(Math.max(0, Number(data.current ?? 0)), data.total);
     }
 
@@ -157,14 +181,5 @@ export class PcDataModel extends TypeDataModel {
     const bonus = Math.max(0, Number(this.recoveries.bonus ?? 0));
     const diePart = dice === 0 ? "1" : `${dice}d6`;
     this.recoveries.formula = bonus > 0 ? `${diePart}+${bonus}` : diePart;
-
-    // Keep the derived maximum available for any future pool presentation.
-    if (actor?.items) {
-      for (const stat of ["might", "speed", "intellect"]) {
-        const effects = actor.allApplicableEffects?.() ?? [];
-        void effects;
-        this.stats[stat].total = Math.max(0, Number(this.stats[stat].total ?? 0));
-      }
-    }
   }
 }
