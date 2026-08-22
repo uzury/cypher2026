@@ -1,0 +1,16 @@
+@layer components {
+  .cypher2026.sheet.actor.pc {
+    .wound-alerts-below {
+      margin-top: 6px;
+      width: 100%;
+    }
+    .wound-alerts-below .wound-alert-banner {
+      width: 100%;
+      white-space: normal;
+      min-height: 24px;
+      justify-content: center;
+      text-align: center;
+      box-sizing: border-box;
+    }
+  }
+}
