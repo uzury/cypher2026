@@ -65,7 +65,7 @@ export function promptAddLastingDamageDialog({ actor }) {
           const lastingCount = Number(wound?.lastingCount ?? 0);
 
           if (!wound || current >= max) {
-            ui.notifications.warn(game.i18n.localize("CYPHER2026.Damage.NoWoundCapacity"));
+            ui.notifications.warn(game.i18n.localize("CYPHER2026.Wounds.AlertDead"));
             return;
           }
 
@@ -90,8 +90,6 @@ export function promptAddLastingDamageDialog({ actor }) {
             [`system.wounds.${severity}.current`]: current + 1,
             [`system.wounds.${severity}.lastingCount`]: lastingCount + 1
           });
-
-          ui.notifications.info(game.i18n.format("CYPHER2026.Damage.Created", { name }));
         }
       },
       {
