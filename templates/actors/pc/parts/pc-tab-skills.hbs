@@ -100,13 +100,13 @@
 
         <!-- COLUNA 5: AÇÕES -->
         <div class="skill-col-actions">
-          <button type="button" class="btn-skill-action btn-roll-skill" data-action="rollSkillItem" title="Rolar Teste de {{skill.name}}">
+          <button type="button" class="btn-action-icon btn-roll-skill" data-action="rollSkillItem" title="Rolar Teste de {{skill.name}}">
             <i class="fas fa-dice-d20"></i>
           </button>
-          <button type="button" class="btn-skill-action btn-edit-skill" data-action="openEditSkillDialog" title="Editar Perícia">
+          <button type="button" class="btn-action-icon" data-action="openEditSkillDialog" title="Editar Perícia">
             <i class="fas fa-edit"></i>
           </button>
-          <button type="button" class="btn-skill-action btn-delete-skill" data-action="itemDelete" title="{{#if skill.system.archived}}Excluir Definitivamente (Alt+Clique para Desarquivar){{else}}Excluir Perícia (Alt+Clique para Arquivar){{/if}}">
+          <button type="button" class="btn-action-icon btn-archive-toggle" data-action="itemArchiveOrDelete" title="{{#if skill.system.archived}}Excluir Definitivamente (Alt+Clique para Desarquivar){{else}}Excluir Perícia (Alt+Clique para Arquivar){{/if}}">
             <i class="fas fa-trash trash-icon"></i>
             <i class="fas fa-box-archive archive-icon"></i>
           </button>

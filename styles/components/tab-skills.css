@@ -279,29 +279,33 @@
           justify-content: flex-end;
           gap: 6px;
 
-          .btn-skill-action {
+          .btn-action-icon {
             background: transparent;
             border: none;
             color: var(--c-text-muted);
             cursor: pointer;
             padding: 3px;
             font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
 
             &:hover { color: var(--c-text-primary); }
             &.btn-roll-skill { color: var(--c-neon-red); font-size: 1rem; }
-            &.btn-delete-skill:hover { color: var(--c-neon-red); }
+            &.btn-roll-skill:hover { color: var(--c-neon-red); }
 
-            .archive-icon { display: none; }
+            .trash-icon { display: none; }
+            .archive-icon { display: inline-block; }
+            &:hover .archive-icon { color: var(--c-gold); }
           }
         }
       }
     }
 
-    /* Ícone de arquivo quando Alt estiver ativo */
     &.alt-active {
-      .btn-delete-skill {
-        .trash-icon { display: none !important; }
-        .archive-icon { display: inline-block !important; color: var(--c-gold) !important; }
+      .btn-archive-toggle {
+        .archive-icon { display: none !important; }
+        .trash-icon { display: inline-block !important; color: var(--c-neon-red) !important; }
       }
     }
   }

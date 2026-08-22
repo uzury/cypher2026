@@ -5,5 +5,41 @@
       font-size: 0.9rem;
       line-height: 1.5;
     }
+
+    /* Padroniza botões de arquivar/lixeira na aba Inventory */
+    .cypher-item-list {
+      .cypher-item-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+
+        .btn-action-icon {
+          background: transparent;
+          border: none;
+          color: var(--c-text-muted);
+          cursor: pointer;
+          padding: 1px 2px;
+          font-size: 0.78rem;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          transition: color 0.15s ease;
+
+          &:hover { color: var(--c-text-primary); }
+
+          .trash-icon { display: none; }
+          .archive-icon { display: inline-block; }
+          &:hover .archive-icon { color: var(--c-gold); }
+        }
+      }
+    }
+
+    &.alt-active {
+      .cypher-item-list .cypher-item-card .btn-archive-toggle {
+        .archive-icon { display: none !important; }
+        .trash-icon { display: inline-block !important; color: var(--c-neon-red) !important; }
+      }
+    }
   }
 }

@@ -5,7 +5,7 @@ import { sortSkills, sortAbilities } from "./pc-sheet-sorting.mjs";
   import { promptAttackDialog } from "../dialogs/attack-dialog.mjs";
   import { promptArmorDialog } from "../dialogs/armor-dialog.mjs";
   import { promptEquipmentDialog } from "../dialogs/equipment-dialog.mjs";
-  import { promptCypherDialog } from "../dialogs/cypher-dialog.mjs";
+  import { promptCypherTypeChoice, promptCypherDialog } from "../dialogs/cypher-dialog.mjs";
   import { promptArtifactDialog } from "../dialogs/artifact-dialog.mjs";
   import { promptFixedSkillDialog } from "../dialogs/fixed-skill-dialog.mjs";
   import { promptDamageDialog } from "../dialogs/damage-prompt-dialog.mjs";
@@ -53,6 +53,7 @@ import { sortSkills, sortAbilities } from "./pc-sheet-sorting.mjs";
           openArmorChatPrompt: CypherPcSheet.#onOpenArmorChatPrompt,
           openEquipmentChatPrompt: CypherPcSheet.#onOpenEquipmentChatPrompt,
           openCypherChatPrompt: CypherPcSheet.#onOpenCypherChatPrompt,
+          useCypher: CypherPcSheet.#onUseCypher,
           openArtifactChatPrompt: CypherPcSheet.#onOpenArtifactChatPrompt,
           openFixedSkillDialog: CypherPcSheet.#onOpenFixedSkillDialog,
           openSkillChatPrompt: CypherPcSheet.#onOpenSkillChatPrompt,
@@ -271,6 +272,13 @@ import { sortSkills, sortAbilities } from "./pc-sheet-sorting.mjs";
       if (item) promptPostItemToChat({ actor: this.actor, item });
     }
 
+    static async #onUseCypher(event, target) {
+      const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+      if (!item) return;
+      await item.update({ "system.archived": true });
+      await promptPostItemToChat({ actor: this.actor, item });
+    }
+
     static #onOpenArtifactChatPrompt(event, target) {
       const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
       if (item) promptPostItemToChat({ actor: this.actor, item });
@@ -329,17 +337,13 @@ import { sortSkills, sortAbilities } from "./pc-sheet-sorting.mjs";
       if (item) promptEquipmentDialog({ actor: this.actor, item });
     }
 
-    static #onAddCypherDialog() {
-      promptCypherDialog({ actor: this.actor });
-    }
-
     static #onOpenAddCypherDialog() {
-      promptCypherDialog({ actor: this.actor });
+      promptCypherTypeChoice({ actor: this.actor });
     }
 
     static #onOpenEditCypherDialog(event, target) {
       const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
-      if (item) promptCypherDialog({ actor: this.actor, item });
+      if (item) promptCypherDialog({ actor: this.actor, item, manifestMode: Boolean(item.system?.manifest) });
     }
 
     static #onOpenAddArtifactDialog() {
@@ -569,16 +573,18 @@ import { sortSkills, sortAbilities } from "./pc-sheet-sorting.mjs";
       const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
       if (!item) return;
 
-      const depletionStr = item.system?.depletion || "1 in 1d20";
-      let die = "1d20";
-      if (depletionStr.includes("1d6")) die = "1d6";
-      else if (depletionStr.includes("1d10")) die = "1d10";
-      else if (depletionStr.includes("1d100")) die = "1d100";
+      const depletionDie = item.system?.depletionDie || item.system?.depletion?.match(/1d\d+/)?.[0] || "1d20";
+      const threshold = Math.max(1, Number(item.system?.depletionThreshold ?? item.system?.depletionValue ?? item.system?.depletion?.match(/\d+/)?.[0] ?? 1) || 1);
+      const maxDieValue = Number(depletionDie.replace(/\D/g, "")) || 20;
+      const safeThreshold = Math.min(threshold, maxDieValue);
 
-      const roll = new Roll(die);
+      const roll = new Roll(depletionDie);
       await roll.evaluate();
 
-      const isDepleted = roll.total === 1;
+      const isDepleted = roll.total <= safeThreshold;
+      if (isDepleted) {
+        await item.update({ "system.archived": true });
+      }
 
       await roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
@@ -588,10 +594,11 @@ import { sortSkills, sortAbilities } from "./pc-sheet-sorting.mjs";
                            <img src="${item.img}" width="28" height="28" class="chat-item-icon" />
                            <div class="chat-header-text">
                            <h3 class="chat-card-title">${game.i18n.localize("CYPHER2026.Artifacts.RollDepletion")}</h3>
-                           <span class="chat-card-subtitle">${item.name} (${depletionStr})</span>
+                           <span class="chat-card-subtitle">${item.name} (${safeThreshold} in ${depletionDie})</span>
                            </div>
                            </div>
                            <div class="chat-card-description">
+                           <span class="chat-tag-pill">Rolled: ${roll.total}</span>
                            ${isDepleted ? `<span class="chat-tag-pill highlight">${game.i18n.localize("CYPHER2026.Artifacts.DepletedNotice")}</span>` : `<span class="chat-tag-pill accent">${game.i18n.localize("CYPHER2026.Artifacts.NotDepletedNotice")}</span>`}
                            </div>
                            </div>
@@ -1052,7 +1059,13 @@ import { sortSkills, sortAbilities } from "./pc-sheet-sorting.mjs";
       }
 
       const isArchived = Boolean(item.system?.archived);
-      await item.update({ "system.archived": !isArchived });
+      await item.update({
+        system: {
+          ...item.system,
+          archived: !isArchived
+        }
+      });
+      this.render();
       const notifyKey = !isArchived ? "CYPHER2026.Item.ArchivedNotification" : "CYPHER2026.Item.UnarchivedNotification";
       ui.notifications.info(game.i18n.format(notifyKey, { name: item.name }));
     }
@@ -1063,9 +1076,13 @@ import { sortSkills, sortAbilities } from "./pc-sheet-sorting.mjs";
 
       if (event.altKey) {
         const isArchived = Boolean(item.system?.archived);
-        await item.update({ "system.archived": !isArchived });
-        const notifyKey = !isArchived ? "CYPHER2026.Item.ArchivedNotification" : "CYPHER2026.Item.UnarchivedNotification";
-        ui.notifications.info(game.i18n.format(notifyKey, { name: item.name }));
+        await item.update({
+          system: {
+            ...item.system,
+            archived: !isArchived
+          }
+        });
+        this.render();
         return;
       }
 

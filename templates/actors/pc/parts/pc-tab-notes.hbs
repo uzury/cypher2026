@@ -1,12 +1,102 @@
 <div class="tab-pane-content {{#unless (eq activeTab 'notes')}}hidden{{/unless}}" data-application-part="tabNotes">
-  <div class="sub-panel-card book-callout-border">
-  <div class="panel-card-header">
-  <div>
-  <span class="sub-title-tag">BIOGRAPHY & LOG</span>
-  <h3 class="panel-heading">CHARACTER NOTES</h3>
+  <div class="notes-grid">
+    <div class="notes-column">
+      <div class="sub-panel-card book-callout-border">
+        <div class="panel-card-header">
+          <div>
+            <span class="sub-title-tag">{{localize "CYPHER2026.Notes.Tag"}}</span>
+            <h3 class="panel-heading">{{localize "CYPHER2026.Notes.CharacterNotes"}}</h3>
+          </div>
+        </div>
+        <textarea class="notes-textarea" name="system.characterNotes" rows="8" placeholder="{{localize 'CYPHER2026.Notes.CharacterNotesPlaceholder'}}">{{system.characterNotes}}</textarea>
+      </div>
+
+      {{#if isGM}}
+      <div class="sub-panel-card book-callout-border">
+        <div class="panel-card-header">
+          <div>
+            <span class="sub-title-tag">GM</span>
+            <h3 class="panel-heading">{{localize "CYPHER2026.Notes.GMNotes"}}</h3>
+          </div>
+        </div>
+        <textarea class="notes-textarea" name="system.gmNotes" rows="8" placeholder="{{localize 'CYPHER2026.Notes.GMNotesPlaceholder'}}">{{system.gmNotes}}</textarea>
+      </div>
+      {{/if}}
+    </div>
+
+    <div class="notes-column">
+      <div class="sub-panel-card book-callout-border">
+        <div class="panel-card-header">
+          <div>
+            <span class="sub-title-tag">{{localize "CYPHER2026.Notes.Tag"}}</span>
+            <h3 class="panel-heading">{{localize "CYPHER2026.Notes.Description"}}</h3>
+          </div>
+        </div>
+        <textarea class="notes-textarea" name="system.description" rows="8" placeholder="{{localize 'CYPHER2026.Notes.DescriptionPlaceholder'}}">{{system.description}}</textarea>
+      </div>
+
+      <div class="sub-panel-card book-callout-border">
+        <div class="panel-card-header">
+          <div>
+            <span class="sub-title-tag">{{localize "CYPHER2026.Notes.Tag"}}</span>
+            <h3 class="panel-heading">{{localize "CYPHER2026.Notes.CharacterArcs"}}</h3>
+          </div>
+          <button type="button" class="btn-add-circle" data-action="openAddCharacterArcDialog" title="{{localize 'CYPHER2026.Dialog.AddCharacterArcTitle'}}">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+
+        <div class="panel-items-list character-arcs-list">
+          {{#each categorizedItems.characterArcs as |arc|}}
+          <div class="character-arc-card {{#if arc.system.archived}}is-archived{{/if}}" data-item-id="{{arc.id}}">
+            <div class="character-arc-header">
+              <div class="character-arc-title-wrap" data-action="openCharacterArcChatPrompt" data-item-id="{{arc.id}}" title="{{localize 'CYPHER2026.Common.PostToChat'}}" style="cursor:pointer;">
+                <span class="character-arc-icon"><i class="fas fa-book-open"></i></span>
+                <span class="character-arc-name">{{arc.name}}</span>
+              </div>
+
+              <div class="character-arc-header-actions">
+                <button type="button" class="btn-step-mini {{#if (eq arc.system.steps.length 1)}}is-disabled{{/if}}" data-action="adjustCharacterArcStep" data-item-id="{{arc.id}}" data-delta="-1" title="{{localize 'CYPHER2026.Common.Decrease'}}" {{#if arc.system.archived}}disabled{{/if}} {{#if (eq arc.system.steps.length 1)}}disabled{{/if}}>-</button>
+                <button type="button" class="btn-step-mini" data-action="adjustCharacterArcStep" data-item-id="{{arc.id}}" data-delta="1" title="{{localize 'CYPHER2026.Common.Increase'}}" {{#if arc.system.archived}}disabled{{/if}}>+</button>
+                <button type="button" class="btn-action-icon btn-archive-toggle" data-action="openEditCharacterArcDialog" data-item-id="{{arc.id}}" title="{{localize 'CYPHER2026.Common.Edit'}}">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button type="button" class="btn-action-icon btn-archive-toggle" data-action="itemArchiveOrDelete" data-item-id="{{arc.id}}" title="{{#if arc.system.archived}}{{localize 'CYPHER2026.Common.DeleteOrUnarchive'}}{{else}}{{localize 'CYPHER2026.Common.DeleteOrArchive'}}{{/if}}">
+                  <i class="fas fa-box-archive archive-icon"></i>
+                  <i class="fas fa-trash trash-icon"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="character-arc-step-track" data-item-id="{{arc.id}}">
+              {{#each arc.system.steps as |step index|}}
+              <button
+                type="button"
+                class="character-arc-step-pill {{#if (eq step.id ../arc.system.currentStepId)}}is-active{{/if}}"
+                data-action="changeCharacterArcStep"
+                data-item-id="{{../arc.id}}"
+                data-step-id="{{step.id}}"
+                title="{{step.description}}"
+                {{#if ../arc.system.archived}}disabled{{/if}}
+              >{{increment index}}</button>
+              {{/each}}
+              <button type="button" class="character-arc-step-add" data-action="insertCharacterArcStep" data-item-id="{{arc.id}}" title="{{localize 'CYPHER2026.Common.Add'}}" {{#if arc.system.archived}}disabled{{/if}}>+</button>
+            </div>
+
+            <textarea
+              class="notes-textarea character-arc-textarea"
+              data-action="updateCharacterArcText"
+              data-item-id="{{arc.id}}"
+              rows="4"
+              placeholder="{{localize 'CYPHER2026.Notes.CharacterArcsPlaceholder'}}"
+              {{#if arc.system.archived}}readonly disabled{{/if}}
+            >{{arc.system.description}}</textarea>
+          </div>
+          {{else}}
+          <div class="empty-placeholder">{{localize "CYPHER2026.Notes.NoCharacterArcs"}}</div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
   </div>
-  </div>
-  <textarea class="notes-textarea" name="system.notes" rows="12" placeholder="Anotações, histórico e objetivos do personagem...">{{system.notes}}</textarea>
-  </div>
-  </div>
-  
+</div>

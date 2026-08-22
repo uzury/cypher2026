@@ -22,4 +22,7 @@ export function registerHandlebars() {
     }
     return accum;
   });
+  Handlebars.registerHelper("increment", function (value) {
+    return Number(value || 0) + 1;
+  });
 }

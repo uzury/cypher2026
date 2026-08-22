@@ -10,8 +10,11 @@
   <li class="cypher-item-card" data-item-id="{{item.id}}">
   <span class="cypher-item-title">{{item.name}}</span>
   <div class="cypher-item-actions">
-  <button type="button" class="btn-icon" data-action="itemEdit"><i class="fas fa-edit"></i></button>
-  <button type="button" class="btn-icon btn-icon-delete" data-action="itemDelete"><i class="fas fa-trash"></i></button>
+  <button type="button" class="btn-action-icon" data-action="itemEdit" title="{{localize 'CYPHER2026.Common.Edit'}}"><i class="fas fa-edit"></i></button>
+  <button type="button" class="btn-action-icon btn-archive-toggle" data-action="itemArchiveOrDelete" title="{{#if item.system.archived}}{{localize 'CYPHER2026.Common.DeleteOrUnarchive'}}{{else}}{{localize 'CYPHER2026.Common.DeleteOrArchive'}}{{/if}}">
+  <i class="fas fa-box-archive archive-icon"></i>
+  <i class="fas fa-trash trash-icon"></i>
+  </button>
   </div>
   </li>
   {{else}}

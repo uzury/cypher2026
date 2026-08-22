@@ -10,6 +10,9 @@ const { TypeDataModel } = foundry.abstract;
         cypherLimit: new fields.NumberField({ initial: 2, integer: true, min: 0 }),
         biography: new fields.HTMLField({ initial: "" }),
         notes: new fields.HTMLField({ initial: "" }),
+        characterNotes: new fields.HTMLField({ initial: "" }),
+        gmNotes: new fields.HTMLField({ initial: "" }),
+        description: new fields.HTMLField({ initial: "" }),
 
         sentence: new fields.SchemaField({
           descriptor: new fields.StringField({ initial: "" }),

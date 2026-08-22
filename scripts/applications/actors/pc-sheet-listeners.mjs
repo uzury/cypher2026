@@ -13,6 +13,27 @@ export function setupPcSheetListeners(sheet) {
   setupMouseAnchoredTooltips(el);
   setupAltKeyListeners(el);
   setupAbilitySearch(el);
+  setupCharacterArcTextInputs(sheet, el);
+}
+
+function setupCharacterArcTextInputs(sheet, el) {
+  const textareas = el.querySelectorAll('textarea[data-action="updateCharacterArcText"]');
+  for (const textarea of textareas) {
+    const syncArcText = async () => {
+      const item = sheet.actor.items.get(textarea.dataset.itemId);
+      if (!item) return;
+
+      await item.update({
+        system: {
+          ...item.system,
+          description: textarea.value ?? ""
+        }
+      });
+    };
+
+    textarea.addEventListener("change", syncArcText);
+    textarea.addEventListener("blur", syncArcText);
+  }
 }
 
 function setupScrollPreservation(sheet, el) {

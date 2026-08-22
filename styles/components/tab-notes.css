@@ -1,5 +1,19 @@
 @layer components {
   .cypher2026.sheet.actor.pc {
+    .notes-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .notes-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-width: 0;
+    }
+
     .notes-textarea {
       background: var(--c-bg-input) !important;
       border: 1px solid var(--c-border-card) !important;
@@ -8,7 +22,208 @@
       font-size: 0.9rem;
       resize: vertical;
       width: 100%;
+      min-height: 180px;
       box-sizing: border-box;
+    }
+
+    .character-arcs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .character-arc-card {
+      background: var(--c-bg-card);
+      border: 1px solid var(--c-border-subtle);
+      border-radius: 8px;
+      padding: 0.5rem 0.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: all 0.15s ease;
+
+      &.is-archived {
+        opacity: 0.45;
+        background: var(--c-bg-panel);
+        border-style: dashed;
+        filter: grayscale(0.5);
+
+        .character-arc-name {
+          text-decoration: line-through;
+          color: var(--c-text-muted);
+        }
+
+        .character-arc-title-wrap,
+        .character-arc-step-track,
+        .character-arc-textarea {
+          pointer-events: none;
+        }
+
+        .character-arc-header-actions {
+          pointer-events: auto;
+        }
+
+        .btn-step-mini,
+        .character-arc-step-pill,
+        .character-arc-step-add,
+        .character-arc-textarea {
+          cursor: default;
+          opacity: 0.75;
+        }
+
+        .btn-archive-toggle {
+          cursor: pointer;
+          opacity: 1;
+        }
+
+        .character-arc-textarea {
+          max-height: 0;
+          opacity: 0;
+          overflow: hidden;
+          margin: 0;
+          padding-top: 0;
+          padding-bottom: 0;
+          border-width: 0;
+          background: var(--c-bg-panel) !important;
+          color: var(--c-text-muted);
+          resize: none;
+          transition: max-height 0.2s ease, opacity 0.15s ease, padding 0.15s ease, border-width 0.15s ease, margin 0.15s ease;
+        }
+
+        &:hover {
+          opacity: 0.85;
+          filter: grayscale(0);
+        }
+      }
+    }
+
+    .character-arc-card .btn-archive-toggle {
+      background: transparent;
+      border: none;
+      color: var(--c-text-muted);
+      cursor: pointer;
+      padding: 1px 2px;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s ease;
+
+      &:hover {
+        color: var(--c-text-primary);
+      }
+    }
+
+    .character-arc-card .btn-archive-toggle .trash-icon {
+      display: none;
+    }
+
+    .character-arc-card .btn-archive-toggle .archive-icon {
+      display: inline-block;
+    }
+
+    .character-arc-card .btn-archive-toggle:hover .archive-icon {
+      color: var(--c-gold);
+    }
+
+    .cypher2026.sheet.actor.pc.alt-active .character-arc-card .btn-archive-toggle .archive-icon {
+      display: none !important;
+    }
+
+    .cypher2026.sheet.actor.pc.alt-active .character-arc-card .btn-archive-toggle .trash-icon {
+      display: inline-block !important;
+      color: var(--c-neon-red) !important;
+    }
+
+    .character-arc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .character-arc-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .character-arc-icon {
+      color: var(--c-gold);
+      font-size: 0.8rem;
+    }
+
+    .character-arc-name {
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .character-arc-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .btn-step-mini {
+      background: var(--c-bg-input);
+      border: 1px solid var(--c-border-card);
+      color: var(--c-text-primary);
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      cursor: pointer;
+      padding: 0;
+
+      &.is-disabled,
+      &:disabled {
+        opacity: 0.35;
+        cursor: default;
+        color: var(--c-text-muted);
+      }
+    }
+
+    .character-arc-step-track {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+    }
+
+    .character-arc-step-pill,
+    .character-arc-step-add {
+      border: 1px solid var(--c-border-card);
+      background: var(--c-bg-input);
+      color: var(--c-text-primary);
+      border-radius: 999px;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 0.45rem;
+      font-size: 0.7rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .character-arc-step-pill.is-active {
+      background: var(--c-gold);
+      color: #111827;
+      border-color: var(--c-gold);
+    }
+
+    .character-arc-textarea {
+      min-height: 80px !important;
+      max-height: 220px;
+      opacity: 1;
+      overflow: hidden;
+      resize: vertical;
+      transition: max-height 0.2s ease, opacity 0.15s ease, padding 0.15s ease, border-width 0.15s ease, margin 0.15s ease;
     }
   }
 }

@@ -61,13 +61,13 @@
 
         <!-- COLUNA 5: AÇÕES -->
         <div class="ability-col-actions">
-          <button type="button" class="btn-ability-action btn-roll-ability" data-action="rollAbilityItem" title="{{localize 'CYPHER2026.Header.RollTask'}}">
+          <button type="button" class="btn-action-icon btn-roll-ability" data-action="rollAbilityItem" title="{{localize 'CYPHER2026.Header.RollTask'}}">
             <i class="fas fa-dice-d20"></i>
           </button>
-          <button type="button" class="btn-ability-action btn-edit-ability" data-action="openEditAbilityDialog" title="{{localize 'CYPHER2026.Common.Edit'}}">
+          <button type="button" class="btn-action-icon" data-action="openEditAbilityDialog" title="{{localize 'CYPHER2026.Common.Edit'}}">
             <i class="fas fa-edit"></i>
           </button>
-          <button type="button" class="btn-ability-action btn-delete-ability" data-action="itemDelete" title="{{#if ability.system.archived}}{{localize 'CYPHER2026.Common.DeleteOrUnarchive'}}{{else}}{{localize 'CYPHER2026.Common.DeleteOrArchive'}}{{/if}}">
+          <button type="button" class="btn-action-icon btn-archive-toggle" data-action="itemArchiveOrDelete" title="{{#if ability.system.archived}}{{localize 'CYPHER2026.Common.DeleteOrUnarchive'}}{{else}}{{localize 'CYPHER2026.Common.DeleteOrArchive'}}{{/if}}">
             <i class="fas fa-trash trash-icon"></i>
             <i class="fas fa-box-archive archive-icon"></i>
           </button>

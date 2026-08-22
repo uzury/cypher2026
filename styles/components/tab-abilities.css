@@ -241,30 +241,34 @@
           justify-content: flex-end;
           gap: 6px;
 
-          .btn-ability-action {
+          .btn-action-icon {
             background: transparent;
             border: none;
             color: var(--c-text-muted);
             cursor: pointer;
             padding: 3px;
             font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
 
             &:hover { color: var(--c-text-primary); }
             &.btn-roll-ability { color: var(--c-neon-cyan); font-size: 0.95rem; }
-            &.btn-delete-ability:hover { color: var(--c-neon-red); }
+            &.btn-roll-ability:hover { color: var(--c-neon-cyan); }
 
-            .archive-icon { display: none; }
+            .trash-icon { display: none; }
+            .archive-icon { display: inline-block; }
+            &:hover .archive-icon { color: var(--c-gold); }
           }
         }
       }
     }
   }
 
-  /* Troca de ícone para caixa de arquivo quando Alt estiver pressionado */
   .cypher2026.sheet.actor.pc.alt-active {
-    .btn-delete-ability {
-      .trash-icon { display: none !important; }
-      .archive-icon { display: inline-block !important; color: var(--c-gold) !important; }
+    .btn-archive-toggle {
+      .archive-icon { display: none !important; }
+      .trash-icon { display: inline-block !important; color: var(--c-neon-red) !important; }
     }
   }
 }

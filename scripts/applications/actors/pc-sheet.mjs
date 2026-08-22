@@ -10,6 +10,10 @@ import { promptPostItemToChat } from "../dialogs/post-chat-dialog.mjs";
 import { promptRallyDialog } from "../dialogs/rally-dialog.mjs";
 import { promptTreatmentDialog } from "../dialogs/treatment-dialog.mjs";
 import { promptAddLastingDamageDialog } from "../dialogs/lasting-damage-dialog.mjs";
+import { promptEquipmentDialog } from "../../dialogs/equipment-dialog.mjs";
+import { promptCypherTypeChoice, promptCypherDialog } from "../../dialogs/cypher-dialog.mjs";
+import { promptArtifactDialog } from "../../dialogs/artifact-dialog.mjs";
+import { promptCharacterArcDialog } from "../../dialogs/character-arc-dialog.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -39,6 +43,7 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       adjustRecoveryDice: CypherPcSheet.#onAdjustRecoveryDice,
       adjustRecoveryBonus: CypherPcSheet.#onAdjustRecoveryBonus,
       adjustRecoveryCategoryMax: CypherPcSheet.#onAdjustRecoveryCategoryMax,
+      adjustCurrency: CypherPcSheet.#onAdjustCurrency,
       openRallyDialog: CypherPcSheet.#onOpenRallyDialog,
       openTreatmentDialog: CypherPcSheet.#onOpenTreatmentDialog,
       openAddLastingDamageDialog: CypherPcSheet.#onOpenAddLastingDamageDialog,
@@ -59,6 +64,23 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       openEditAttackDialog: CypherPcSheet.#onOpenEditAttackDialog,
       openAddArmorDialog: CypherPcSheet.#onOpenAddArmorDialog,
       openEditArmorDialog: CypherPcSheet.#onOpenEditArmorDialog,
+      openAddEquipmentDialog: CypherPcSheet.#onOpenAddEquipmentDialog,
+      openEditEquipmentDialog: CypherPcSheet.#onOpenEditEquipmentDialog,
+      openCypherChatPrompt: CypherPcSheet.#onOpenCypherChatPrompt,
+      useCypher: CypherPcSheet.#onUseCypher,
+      openAddCypherDialog: CypherPcSheet.#onOpenAddCypherDialog,
+      openEditCypherDialog: CypherPcSheet.#onOpenEditCypherDialog,
+      openAddArtifactDialog: CypherPcSheet.#onOpenAddArtifactDialog,
+      openEditArtifactDialog: CypherPcSheet.#onOpenEditArtifactDialog,
+      openAddCharacterArcDialog: CypherPcSheet.#onOpenAddCharacterArcDialog,
+      openEditCharacterArcDialog: CypherPcSheet.#onOpenEditCharacterArcDialog,
+      openCharacterArcChatPrompt: CypherPcSheet.#onOpenCharacterArcChatPrompt,
+      adjustCharacterArcStep: CypherPcSheet.#onAdjustCharacterArcStep,
+      changeCharacterArcStep: CypherPcSheet.#onChangeCharacterArcStep,
+      insertCharacterArcStep: CypherPcSheet.#onInsertCharacterArcStep,
+      deleteCharacterArcStep: CypherPcSheet.#onDeleteCharacterArcStep,
+      openArtifactChatPrompt: CypherPcSheet.#onOpenArtifactChatPrompt,
+      rollArtifactDepletion: CypherPcSheet.#onRollArtifactDepletion,
       toggleArmorFreelyUse: CypherPcSheet.#onToggleArmorFreelyUse,
       toggleShieldWound: CypherPcSheet.#onToggleShieldWound,
       toggleQuickRoll: CypherPcSheet.#onToggleQuickRoll,
@@ -105,6 +127,12 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.system = actor.system;
     context.actor = actor;
     context.isEditable = this.isEditable;
+    context.isGM = Boolean(game.user?.isGM);
+    // Contagem de Cyphers e Limite (valor editável em `actor.system.cypherLimit`, padrão 2)
+    const activeCyphers = items.filter((i) => i.type === "cypher" && !i.system?.archived);
+    context.cypherCount = activeCyphers.length;
+    context.cypherLimit = Number(actor.system?.cypherLimit ?? 2);
+    context.isOverCypherLimit = context.cypherCount > context.cypherLimit;
 
     const skillSortMode = actor.getFlag("cypher-2026", "skillSort") || "alpha-asc";
     context.skillSortMode = skillSortMode;
@@ -126,6 +154,18 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const activeArmors = allArmors.filter((i) => !i.system?.archived);
     const archivedArmors = allArmors.filter((i) => i.system?.archived);
 
+    const allArtifacts = items.filter((i) => i.type === "artifact");
+    const activeArtifacts = allArtifacts.filter((i) => !i.system?.archived);
+    const archivedArtifacts = allArtifacts.filter((i) => i.system?.archived);
+
+    const allCyphers = items.filter((i) => i.type === "cypher");
+    const activeCyphersList = allCyphers.filter((i) => !i.system?.archived);
+    const archivedCyphersList = allCyphers.filter((i) => i.system?.archived);
+
+    const allCharacterArcs = items.filter((i) => i.type === "characterArc");
+    const activeCharacterArcs = allCharacterArcs.filter((i) => !i.system?.archived);
+    const archivedCharacterArcs = allCharacterArcs.filter((i) => i.system?.archived);
+
     context.categorizedItems = {
       skills: sortSkills(items, skillSortMode),
       abilities: sortAbilities(items, abilitySortMode),
@@ -134,7 +174,9 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       armors: [...activeArmors, ...archivedArmors],
       weapons: items.filter((i) => i.type === "weapon" && !i.system?.archived),
       equipment: items.filter((i) => i.type === "equipment" && !i.system?.isDamage && !i.system?.archived),
-      cyphers: items.filter((i) => i.type === "cypher" && !i.system?.archived)
+      cyphers: [...activeCyphersList, ...archivedCyphersList],
+      artifacts: [...activeArtifacts, ...archivedArtifacts],
+      characterArcs: [...activeCharacterArcs, ...archivedCharacterArcs]
     };
 
     return context;
@@ -158,6 +200,19 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const current = Boolean(this.actor.getFlag("cypher-2026", "quickRoll"));
     await this.actor.setFlag("cypher-2026", "quickRoll", !current);
     this.render();
+  }
+
+  static async #onAdjustCurrency(event, target) {
+    const currencyKey = target.dataset.currency;
+    const delta = parseInt(target.dataset.delta, 10) || 0;
+    if (!currencyKey) return;
+
+    const current = Number(this.actor.system?.currency?.[currencyKey] ?? 0);
+    const nextVal = Math.max(0, current + delta);
+
+    await this.actor.update({
+      [`system.currency.${currencyKey}`]: nextVal
+    });
   }
 
   static async #onCycleSkillSort() {
@@ -240,6 +295,209 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static #onOpenEditArmorDialog(event, target) {
     const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
     if (item) promptArmorDialog({ actor: this.actor, item });
+  }
+
+  static #onOpenAddEquipmentDialog() {
+    promptEquipmentDialog({ actor: this.actor });
+  }
+
+  static #onOpenEditEquipmentDialog(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (item) promptEquipmentDialog({ actor: this.actor, item });
+  }
+
+  static #onOpenCypherChatPrompt(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (item) promptPostItemToChat({ actor: this.actor, item, archiveOnSend: false });
+  }
+
+  static async #onUseCypher(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (!item) return;
+    await promptPostItemToChat({ actor: this.actor, item, archiveOnSend: true });
+  }
+
+  static #onOpenAddCypherDialog() {
+    promptCypherTypeChoice({ actor: this.actor });
+  }
+
+  static #onOpenEditCypherDialog(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (item) promptCypherDialog({ actor: this.actor, item, manifestMode: Boolean(item.system?.manifest) });
+  }
+
+  static #onOpenAddArtifactDialog() {
+    promptArtifactDialog({ actor: this.actor });
+  }
+
+  static #onOpenEditArtifactDialog(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (item) promptArtifactDialog({ actor: this.actor, item });
+  }
+
+  static #onOpenAddCharacterArcDialog() {
+    promptCharacterArcDialog({ actor: this.actor });
+  }
+
+  static #onOpenEditCharacterArcDialog(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (item) promptCharacterArcDialog({ actor: this.actor, item });
+  }
+
+  static #onOpenCharacterArcChatPrompt(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (item) promptPostItemToChat({ actor: this.actor, item });
+  }
+
+  static async #onAdjustCharacterArcStep(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (!item) return;
+
+    const delta = Number(target.dataset.delta) || 0;
+    const steps = Array.isArray(item.system?.steps) && item.system.steps.length
+      ? item.system.steps.map((step) => ({ ...step, description: step.description ?? "" }))
+      : [{ id: crypto.randomUUID?.() ?? `arc-step-${Date.now()}`, description: item.system?.description ?? "" }];
+
+    const current = Number(item.system?.currentStep ?? 0);
+    const nextLength = Math.max(1, steps.length + delta);
+
+    while (steps.length < nextLength) {
+      steps.push({ id: crypto.randomUUID?.() ?? `arc-step-${Date.now()}`, description: "" });
+    }
+
+    while (steps.length > nextLength) {
+      steps.pop();
+    }
+
+    const safeCurrent = Math.min(Math.max(current, 0), Math.max(0, steps.length - 1));
+    const currentStepId = steps[safeCurrent]?.id ?? null;
+
+    await item.update({
+      system: {
+        ...item.system,
+        steps,
+        currentStep: safeCurrent,
+        currentStepId
+      }
+    });
+  }
+
+  static async #onChangeCharacterArcStep(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (!item) return;
+
+    const stepId = target.dataset.stepId;
+    const steps = Array.isArray(item.system?.steps) ? item.system.steps : [];
+    const index = steps.findIndex((step) => step.id === stepId);
+    if (index < 0) return;
+
+    await item.update({
+      system: {
+        ...item.system,
+        currentStep: index,
+        currentStepId: stepId
+      }
+    });
+  }
+
+  static async #onInsertCharacterArcStep(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (!item) return;
+
+    const steps = Array.isArray(item.system?.steps)
+      ? item.system.steps.map((step) => ({ ...step, description: String(step.description ?? "") }))
+      : [];
+
+    const nextStep = { id: crypto.randomUUID?.() ?? `arc-step-${Date.now()}`, description: "" };
+    const nextSteps = [...steps, nextStep];
+    const nextIndex = nextSteps.length - 1;
+
+    await item.update({
+      system: {
+        ...item.system,
+        steps: nextSteps,
+        currentStep: nextIndex,
+        currentStepId: nextStep.id
+      }
+    });
+  }
+
+  static async #onDeleteCharacterArcStep(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (!item) return;
+
+    const steps = Array.isArray(item.system?.steps)
+      ? item.system.steps.map((step) => ({ ...step, description: String(step.description ?? "") }))
+      : [];
+
+    if (steps.length <= 1) {
+      const resetStep = { id: crypto.randomUUID?.() ?? `arc-step-${Date.now()}`, description: "" };
+      await item.update({
+        system: {
+          ...item.system,
+          steps: [resetStep],
+          currentStep: 0,
+          currentStepId: resetStep.id
+        }
+      });
+      return;
+    }
+
+    const current = Number(item.system?.currentStep ?? 0);
+    const remainingSteps = steps.filter((_, index) => index !== current);
+    const safeCurrent = Math.min(current, remainingSteps.length - 1);
+    const nextCurrentStep = remainingSteps[safeCurrent] ?? remainingSteps[0] ?? null;
+
+    await item.update({
+      system: {
+        ...item.system,
+        steps: remainingSteps,
+        currentStep: safeCurrent,
+        currentStepId: nextCurrentStep?.id ?? null
+      }
+    });
+  }
+
+  static #onOpenArtifactChatPrompt(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (item) promptPostItemToChat({ actor: this.actor, item });
+  }
+
+  static async #onRollArtifactDepletion(event, target) {
+    const item = this.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+    if (!item) return;
+
+    const depletionDie = item.system?.depletionDie || item.system?.depletion?.match(/1d\d+/)?.[0] || "1d20";
+    const threshold = Math.max(1, Number(item.system?.depletionThreshold ?? item.system?.depletionValue ?? item.system?.depletion?.match(/\d+/)?.[0] ?? 1) || 1);
+    const maxDieValue = Number(depletionDie.replace(/\D/g, "")) || 20;
+    const safeThreshold = Math.min(threshold, maxDieValue);
+
+    const roll = new Roll(depletionDie);
+    await roll.evaluate();
+
+    const isDepleted = roll.total <= safeThreshold;
+    if (isDepleted) {
+      await item.update({ "system.archived": true });
+    }
+
+    await roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor: `
+        <div class="cypher-chat-card item-card">
+          <div class="chat-card-header">
+            <img src="${item.img}" width="28" height="28" class="chat-item-icon" />
+            <div class="chat-header-text">
+              <h3 class="chat-card-title">${game.i18n.localize("CYPHER2026.Artifacts.RollDepletion")}</h3>
+              <span class="chat-card-subtitle">${item.name} (${safeThreshold} in ${depletionDie})</span>
+            </div>
+          </div>
+          <div class="chat-card-description">
+            <span class="chat-tag-pill">Rolled: ${roll.total}</span>
+            ${isDepleted ? `<span class="chat-tag-pill highlight">${game.i18n.localize("CYPHER2026.Artifacts.DepletedNotice")}</span>` : `<span class="chat-tag-pill accent">${game.i18n.localize("CYPHER2026.Artifacts.NotDepletedNotice")}</span>`}
+          </div>
+        </div>
+      `
+    });
   }
 
   static async #onToggleArmorFreelyUse(event, target) {
@@ -892,7 +1150,13 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     }
 
     const isArchived = Boolean(item.system?.archived);
-    await item.update({ "system.archived": !isArchived });
+    await item.update({
+      system: {
+        ...item.system,
+        archived: !isArchived
+      }
+    });
+    this.render();
     const notifyKey = !isArchived ? "CYPHER2026.Item.ArchivedNotification" : "CYPHER2026.Item.UnarchivedNotification";
     ui.notifications.info(game.i18n.format(notifyKey, { name: item.name }));
   }
@@ -903,7 +1167,13 @@ export class CypherPcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
     if (event.altKey) {
       const isArchived = Boolean(item.system?.archived);
-      await item.update({ "system.archived": !isArchived });
+      await item.update({
+        system: {
+          ...item.system,
+          archived: !isArchived
+        }
+      });
+      this.render();
       const notifyKey = !isArchived ? "CYPHER2026.Item.ArchivedNotification" : "CYPHER2026.Item.UnarchivedNotification";
       ui.notifications.info(game.i18n.format(notifyKey, { name: item.name }));
       return;

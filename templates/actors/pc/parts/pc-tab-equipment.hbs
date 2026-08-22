@@ -87,6 +87,14 @@
   {{#if (gt item.system.quantity 1)}}
   <span class="eq-qty-pill">x{{item.system.quantity}}</span>
   {{/if}}
+  <div class="eq-sub-pills">
+    {{#if item.system.carry}}
+      <span class="eq-pill carrying-pill">{{localize "CYPHER2026.Equipment.CarryingTag"}}</span>
+    {{/if}}
+    {{#if item.system.isWeapon}}
+      <span class="eq-pill weapon-pill">{{localize "CYPHER2026.Equipment.WeaponTag"}}</span>
+    {{/if}}
+  </div>
   </div>
 
   <div class="eq-right">
@@ -130,14 +138,24 @@
   <div class="cypher-left" data-action="openCypherChatPrompt" title="{{localize 'CYPHER2026.Common.PostToChat'}}" style="cursor:pointer;">
   <img class="cypher-icon" src="{{cypher.img}}" width="24" height="24" alt="{{cypher.name}}" />
   <div class="cypher-info-wrap">
-  <span class="cypher-name">{{cypher.name}}</span>
-  {{#if cypher.system.level}}
-  <span class="cypher-level-badge">{{localize "CYPHER2026.Common.LevelShort"}} {{cypher.system.level}}</span>
-  {{/if}}
+    <span class="cypher-name">{{cypher.name}}</span>
+    <div class="cypher-sub-tags">
+      {{#if cypher.system.manifest}}
+      <span class="cypher-tag manifest-tag">{{localize "CYPHER2026.Cyphers.ManifestTag"}}</span>
+        {{#if (eq cypher.system.power "low")}}<span class="cypher-tag power-tag">{{localize "CYPHER2026.Cypher.Power.low"}}</span>{{/if}}
+        {{#if (eq cypher.system.power "med")}}<span class="cypher-tag power-tag">{{localize "CYPHER2026.Cypher.Power.med"}}</span>{{/if}}
+        {{#if (eq cypher.system.power "adv")}}<span class="cypher-tag power-tag">{{localize "CYPHER2026.Cypher.Power.adv"}}</span>{{/if}}
+        {{#if (eq cypher.system.power "high")}}<span class="cypher-tag power-tag">{{localize "CYPHER2026.Cypher.Power.high"}}</span>{{/if}}
+        {{#if (eq cypher.system.power "ultra")}}<span class="cypher-tag power-tag">{{localize "CYPHER2026.Cypher.Power.ultra"}}</span>{{/if}}
+      {{/if}}
+    </div>
   </div>
   </div>
 
   <div class="cypher-right">
+  <button type="button" class="btn-action-icon btn-use-item" data-action="useCypher" title="{{localize 'CYPHER2026.Cyphers.UseTooltip'}}">
+  <i class="fas fa-paper-plane"></i>
+  </button>
   <button type="button" class="btn-action-icon" data-action="openEditCypherDialog" title="{{localize 'CYPHER2026.Common.Edit'}}">
   <i class="fas fa-edit"></i>
   </button>
@@ -176,8 +194,8 @@
   <div class="artifact-info-wrap">
   <span class="artifact-name">{{artifact.name}}</span>
   <div class="artifact-sub-pills">
-  {{#if artifact.system.level}}
-  <span class="artifact-level-badge">{{localize "CYPHER2026.Common.LevelShort"}} {{artifact.system.level}}</span>
+  {{#if artifact.system.form}}
+  <span class="artifact-level-badge">Form: {{artifact.system.form}}</span>
   {{/if}}
   {{#if artifact.system.depletion}}
   <span class="artifact-depletion-badge">{{localize "CYPHER2026.Artifacts.DepletionShort"}}: {{artifact.system.depletion}}</span>
