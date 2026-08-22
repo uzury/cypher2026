@@ -3,14 +3,8 @@
   "title": "Cypher 2026",
   "description": "Sistema Cypher 2026 para Foundry VTT V14.",
   "version": "0.1.0",
-  "compatibility": {
-    "minimum": "14",
-    "verified": "14.366",
-    "maximum": "14"
-  },
-  "esmodules": [
-    "cypher-2026.mjs"
-  ],
+  "compatibility": { "minimum": "14", "verified": "14.366", "maximum": "14" },
+  "esmodules": ["cypher-2026.mjs"],
   "styles": [
     "styles/layers.css",
     "styles/tokens.css",
@@ -20,6 +14,7 @@
     "styles/applications/pc-navigation.css",
     "styles/components/tab-skills.css",
     "styles/components/tab-combat.css",
+    "styles/components/combat-wound-alerts.css",
     "styles/components/tab-overview.css",
     "styles/components/tab-abilities.css",
     "styles/components/tab-equipment.css",
@@ -29,37 +24,14 @@
     "styles/components/chat-cards.css"
   ],
   "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json"
-    },
-    {
-      "lang": "pt-BR",
-      "name": "Português (Brasil)",
-      "path": "lang/pt-BR.json"
-    }
+    { "lang": "en", "name": "English", "path": "lang/en.json" },
+    { "lang": "pt-BR", "name": "Português (Brasil)", "path": "lang/pt-BR.json" }
   ],
   "documentTypes": {
-    "Actor": {
-      "pc": {},
-      "npc": {},
-      "companion": {}
-    },
+    "Actor": { "pc": {}, "npc": {}, "companion": {} },
     "Item": {
-      "ability": {},
-      "skill": {},
-      "cypher": {},
-      "weapon": {},
-      "armor": {},
-      "equipment": {},
-      "artifact": {},
-      "characterArc": {},
-      "descriptor": {},
-      "species": {},
-      "characterType": {},
-      "focus": {},
-      "genre": {}
+      "ability": {}, "skill": {}, "cypher": {}, "weapon": {}, "armor": {}, "equipment": {}, "artifact": {}, "characterArc": {},
+      "descriptor": {}, "species": {}, "characterType": {}, "focus": {}, "genre": {}
     }
   }
 }
