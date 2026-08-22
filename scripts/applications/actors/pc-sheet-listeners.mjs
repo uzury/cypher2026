@@ -2,6 +2,9 @@
  * Configura todos os listeners reativos do DOM na ActorSheet.
  * @param {CypherPcSheet} sheet
  */
+import { applyWound, removeNormalWound } from "../../domain/wounds/apply-wound.mjs";
+import { previewPoolSpend } from "../../domain/pools/calculate-pool-total.mjs";
+
 export function setupPcSheetListeners(sheet) {
   const el = sheet.element;
   if (!el) return;
@@ -13,7 +16,90 @@ export function setupPcSheetListeners(sheet) {
   setupMouseAnchoredTooltips(el);
   setupAltKeyListeners(el);
   setupAbilitySearch(el);
+  setupRuleActionOverrides(sheet, el);
   setupCharacterArcTextInputs(sheet, el);
+}
+
+function setupRuleActionOverrides(sheet, el) {
+  sheet._cypherRuleActionController?.abort();
+  const controller = new AbortController();
+  sheet._cypherRuleActionController = controller;
+
+  el.addEventListener("click", async (event) => {
+    const target = event.target.closest("[data-action]");
+    if (!target) return;
+
+    const action = target.dataset.action;
+    if (!["adjustRecoveryDice", "adjustRecoveryBonus", "adjustWoundCurrent", "rollAbilityItem"].includes(action)) return;
+    if (target.dataset.cypherRuleBypass === "true") {
+      delete target.dataset.cypherRuleBypass;
+      return;
+    }
+
+    if (action === "adjustRecoveryDice") {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const current = Number(sheet.actor.system.recoveries.diceNum ?? 0);
+      const delta = Number(target.dataset.delta ?? 0);
+      const next = Math.min(6, Math.max(0, current + delta));
+      await sheet.actor.update({ "system.recoveries.diceNum": next });
+      return;
+    }
+
+    if (action === "adjustRecoveryBonus") {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const current = Number(sheet.actor.system.recoveries.bonus ?? 0);
+      const delta = Number(target.dataset.delta ?? 0);
+      const next = Math.min(99, Math.max(0, current + delta));
+      await sheet.actor.update({ "system.recoveries.bonus": next });
+      return;
+    }
+
+    if (action === "adjustWoundCurrent") {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const severity = target.dataset.severity;
+      const delta = Number(target.dataset.delta ?? 0);
+      if (!["minor", "moderate", "major"].includes(severity)) return;
+
+      const wounds = foundry.utils.duplicate(sheet.actor.system.wounds);
+      const result = delta > 0
+        ? applyWound(wounds, severity)
+        : { wounds: removeNormalWound(wounds, severity) };
+
+      const updates = {};
+      for (const key of ["minor", "moderate", "major"]) {
+        updates[`system.wounds.${key}.current`] = result.wounds[key].current;
+      }
+      await sheet.actor.update(updates);
+      return;
+    }
+
+    if (action === "rollAbilityItem") {
+      const ability = sheet.actor.items.get(target.closest("[data-item-id]")?.dataset.itemId);
+      const isEnabler = ability?.system?.kind === "enabler";
+      const pool = ability?.system?.pool;
+      const rawCost = Number(ability?.system?.cost ?? 0);
+      if (!ability || isEnabler || !pool || pool === "none" || rawCost <= 0) return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      const stat = sheet.actor.system.stats[pool];
+      const preview = previewPoolSpend(stat, rawCost);
+      if (!preview.ok) {
+        ui.notifications.warn(`${ability.name}: ${game.i18n.localize("CYPHER2026.Stats.ApplyDamage")} — ${preview.current}/${preview.cost}`);
+        return;
+      }
+
+      // O clique do botão é a confirmação explícita de uso da Ability.
+      // O gasto ocorre uma única vez antes de delegar a rolagem existente.
+      await sheet.actor.update({ [`system.stats.${pool}.current`]: preview.next });
+      target.dataset.cypherRuleBypass = "true";
+      target.click();
+    }
+  }, { capture: true, signal: controller.signal });
 }
 
 function setupCharacterArcTextInputs(sheet, el) {
@@ -40,7 +126,6 @@ function setupScrollPreservation(sheet, el) {
   const pane = el.querySelector(".tab-pane-content:not(.hidden)");
   if (!pane) return;
 
-  // Restaura imediatamente a posição de rolagem gravada
   if (sheet._lastTabScroll !== undefined) {
     pane.scrollTop = sheet._lastTabScroll;
     requestAnimationFrame(() => {
@@ -48,7 +133,6 @@ function setupScrollPreservation(sheet, el) {
     });
   }
 
-  // Grava a cada rolagem para manter a memória sempre atualizada
   pane.addEventListener("scroll", () => {
     sheet._lastTabScroll = pane.scrollTop;
   }, { passive: true });
